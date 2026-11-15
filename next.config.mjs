@@ -13,7 +13,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' https://checkout.razorpay.com https://api.qrserver.com",
+              "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://api.qrserver.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' https://images.unsplash.com https://api.qrserver.com data:",
               "connect-src 'self' https://*.supabase.co https://api.razorpay.com",
