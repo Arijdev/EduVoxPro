@@ -323,7 +323,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (!user) return;
 
     const newEnrollment: Enrollment = {
-      id: `enr_${Date.now().toString(36)}`,
+      id: `enr_local_${Date.now().toString(36)}`,
       userId: user.id,
       trackId: track.id,
       enrolledAt: new Date().toISOString(),
@@ -335,7 +335,6 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     // [SUPABASE INTEGRATION POINT] Persist in database
     try {
       await supabase.from("enrollments").insert({
-        id: newEnrollment.id,
         user_id: user.id,
         track_id: track.id,
         status: "active",
