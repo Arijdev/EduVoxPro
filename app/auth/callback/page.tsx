@@ -18,7 +18,7 @@ export default function AuthCallback() {
     const errorDescription = params.get("error_description");
 
     if (error) {
-      router.push(`/login?error=${encodeURIComponent(errorDescription || error)}`);
+      router.replace(`/login?error=${encodeURIComponent(errorDescription || error)}`);
       return;
     }
 
@@ -27,17 +27,17 @@ export default function AuthCallback() {
         .exchangeCodeForSession(code)
         .then(({ data, error: exchangeError }) => {
           if (exchangeError || !data.session) {
-            router.push(
+            router.replace(
               `/login?error=${encodeURIComponent(
                 exchangeError?.message || "OAuth session exchange failed"
               )}`
             );
             return;
           }
-          router.push("/dashboard");
+          router.replace("/dashboard");
         });
     } else {
-      router.push("/login?error=No authorization code received");
+      router.replace("/login?error=No authorization code received");
     }
   }, [router]);
 
