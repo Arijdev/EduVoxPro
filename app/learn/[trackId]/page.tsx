@@ -100,7 +100,10 @@ export default function LearnWorkspacePage() {
   // ── Enrollment Gate ──
   if (!enrolled) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
+      <div
+        className="max-w-4xl mx-auto px-4 py-16 sm:py-24"
+        suppressHydrationWarning
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
@@ -176,7 +179,10 @@ export default function LearnWorkspacePage() {
 
   // ── Learning Workspace ──
   return (
-    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+    <div
+      className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]"
+      suppressHydrationWarning
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
