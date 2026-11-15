@@ -30,8 +30,11 @@ export const CheckoutModal: React.FC = () => {
   const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  if (!activeCheckoutTrack || !user) return null;
+  useEffect(() => setIsMounted(true), []);
+
+  if (!isMounted || !activeCheckoutTrack || !user) return null;
 
   useEffect(() => {
     const script = document.createElement("script");
