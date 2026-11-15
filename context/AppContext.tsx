@@ -208,19 +208,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   // Auth Functions
-  const login = async (email: string, password = "password", fullName?: string) => {
+  const login = async (email: string, password?: string, fullName?: string) => {
+    if (!password) {
+      throw new Error("Password is required");
+    }
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     
     if (error) {
-      console.warn("[Supabase Auth] Login note:", error.message);
-      const loggedUser: SupabaseUser = {
-        id: "usr_" + Math.random().toString(36).substring(2, 9),
-        email: email,
-        fullName: fullName || email.split("@")[0].toUpperCase() || "Master Developer",
-      };
-      saveUserData(loggedUser);
-      setIsAuthModalOpen(false);
-      return;
+      throw error;
     }
 
     if (data?.user) {
@@ -234,7 +229,10 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
 
-  const signup = async (email: string, password = "password", fullName = "Master Developer") => {
+  const signup = async (email: string, password?: string, fullName?: string) => {
+    if (!password) {
+      throw new Error("Password is required");
+    }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -246,22 +244,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
 
     if (error) {
-      console.warn("[Supabase Auth] Sign up note:", error.message);
-      const newUser: SupabaseUser = {
-        id: "usr_" + Math.random().toString(36).substring(2, 9),
-        email,
-        fullName,
-      };
-      saveUserData(newUser);
-      setIsAuthModalOpen(false);
-      return;
+      throw error;
     }
 
     if (data?.user) {
       const newUser: SupabaseUser = {
         id: data.user.id,
         email: data.user.email || email,
-        fullName: fullName,
+        fullName: fullName || "",
       };
       saveUserData(newUser);
       setIsAuthModalOpen(false);
@@ -277,14 +267,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
 
     if (error) {
-      console.warn("[Supabase Auth] Google OAuth fallback:", error.message);
-      const demoUser: SupabaseUser = {
-        id: "usr_google_dev",
-        email: "alex.rivera@eduvortexpro.dev",
-        fullName: "Alex Rivera",
-      };
-      saveUserData(demoUser);
-      setIsAuthModalOpen(false);
+      throw error;
     }
   };
 

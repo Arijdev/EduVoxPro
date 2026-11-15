@@ -1,23 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
-import { 
-  X, 
-  Copy, 
-  Check, 
-  QrCode, 
-  ShieldCheck, 
-  Zap, 
-  Sparkles, 
-  CheckCircle2, 
-  CreditCard
+import React, { useEffect, useState } from "react";
+import {
+  X,
+  Copy,
+  Check,
+  QrCode,
+  ShieldCheck,
+  Zap,
+  Sparkles,
+  CheckCircle2,
+  CreditCard,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { formatINR } from "@/lib/utils";
-import { 
-  DEFAULT_UPI_CONFIG, 
-  generateUPIQrUrl, 
-  simulateUPIWebhookVerification 
+import {
+  DEFAULT_UPI_CONFIG,
+  generateUPIQrUrl,
+  simulateUPIWebhookVerification,
 } from "@/lib/upi";
 
 export const CheckoutModal: React.FC = () => {
@@ -26,8 +28,23 @@ export const CheckoutModal: React.FC = () => {
   const [transactionRef, setTransactionRef] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   if (!activeCheckoutTrack || !user) return null;
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => setRazorpayLoaded(true);
+    script.onerror = () => setPaymentError("Razorpay checkout script failed to load");
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+      setRazorpayLoaded(false);
+    };
+  }, []);
 
   const orderPayload = {
     trackId: activeCheckoutTrack.id,
@@ -58,6 +75,7 @@ export const CheckoutModal: React.FC = () => {
   const handleSimulateWebhookPayment = async () => {
     setIsProcessing(true);
     setWebhookMessage("Dispatched UPI Webhook Event to Server...");
+    setPaymentError(null);
 
     try {
       await simulateUPIWebhookVerification(orderPayload);
@@ -65,7 +83,97 @@ export const CheckoutModal: React.FC = () => {
       await enrollTrack(activeCheckoutTrack, orderPayload.transactionRef);
     } catch (err) {
       setWebhookMessage("Webhook verification failed. Please try again.");
+      setPaymentError("UPI webhook verification failed");
     } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleRazorpayPay = async () => {
+    if (!razorpayLoaded) {
+      setPaymentError("Razorpay checkout is still loading. Please try again.");
+      return;
+    }
+
+    setIsProcessing(true);
+    setPaymentError(null);
+    setWebhookMessage(null);
+
+    try {
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: activeCheckoutTrack.priceINR * 100,
+          currency: "INR",
+          receipt: `rcpt_${activeCheckoutTrack.id}_${user.id}`,
+          trackId: activeCheckoutTrack.id,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to create Razorpay order");
+      }
+
+      const { order_id } = await res.json();
+
+      const options: any = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+        amount: activeCheckoutTrack.priceINR * 100,
+        currency: "INR",
+        name: "EduVortexPro",
+        description: `Certification: ${activeCheckoutTrack.title}`,
+        order_id,
+        handler: async (response: any) => {
+          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+            response;
+
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id,
+                razorpay_payment_id,
+                razorpay_signature,
+                trackId: activeCheckoutTrack.id,
+              }),
+            });
+
+            if (!verifyRes.ok) {
+              const errData = await verifyRes.json().catch(() => ({}));
+              setPaymentError(errData.error || "Payment signature verification failed");
+              setIsProcessing(false);
+              return;
+            }
+
+            setWebhookMessage("Razorpay payment verified. Enrollment created on server.");
+            closeCheckout();
+          } catch (err: any) {
+            setPaymentError(err.message || "Payment verification failed");
+            setIsProcessing(false);
+          }
+        },
+        prefill: {
+          name: user.fullName || "Student",
+          email: user.email || "",
+        },
+        theme: {
+          color: "#4F46E5",
+        },
+        modal: {
+          ondismiss: () => {
+            setPaymentError("Payment cancelled by user");
+            setIsProcessing(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      setPaymentError(err.message || "Failed to initiate Razorpay payment");
       setIsProcessing(false);
     }
   };
@@ -88,18 +196,26 @@ export const CheckoutModal: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-black text-slate-900">Enrollment & Direct UPI Checkout</h2>
+              <h2 className="text-xl font-black text-slate-900">Enrollment & Checkout</h2>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
-                ZERO GATEWAY FEE
+                DIRECT UPI & RAZORPAY
               </span>
             </div>
             <p className="text-xs text-slate-500">
-              Scan with any UPI App (GPay, PhonePe, Paytm, CRED) or trigger test simulation.
+              Pay with Razorpay or scan with any UPI App (GPay, PhonePe, Paytm, CRED).
             </p>
           </div>
         </div>
 
-        {/* Two-Column Grid: Summary & UPI Scanner */}
+        {/* Payment Error */}
+        {paymentError && (
+          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 font-medium">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{paymentError}</span>
+          </div>
+        )}
+
+        {/* Two-Column Grid: Summary & Payment */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Left Column: Order Summary */}
           <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -146,8 +262,41 @@ export const CheckoutModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Direct UPI Payment Box */}
+          {/* Right Column: Razorpay & UPI Payment */}
           <div className="space-y-4 flex flex-col items-center text-center">
+            {/* Razorpay Checkout Button */}
+            <button
+              type="button"
+              onClick={handleRazorpayPay}
+              disabled={isProcessing || !razorpayLoaded}
+              className={`w-full py-3.5 px-6 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50 ${
+                isProcessing || !razorpayLoaded
+                  ? "bg-slate-200 text-slate-500 border border-slate-200"
+                  : "bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white shadow-indigo-200 border border-transparent"
+              }`}
+            >
+              {isProcessing ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 text-white animate-spin" />
+                  Processing Payment...
+                </span>
+              ) : !razorpayLoaded ? (
+                <span>Loading Razorpay...</span>
+              ) : (
+                <>
+                  <CreditCard className="w-4 h-4" />
+                  <span>Pay with Razorpay</span>
+                </>
+              )}
+            </button>
+
+            {/* Divider */}
+            <div className="w-full flex items-center gap-2">
+              <span className="flex-1 h-[1px] bg-slate-200" />
+              <span className="text-[10px] font-mono text-slate-400 uppercase px-2">OR</span>
+              <span className="flex-1 h-[1px] bg-slate-200" />
+            </div>
+
             {/* Dynamic QR Code Card */}
             <div className="relative p-2.5 rounded-2xl bg-white shadow-md border border-slate-200">
               <img
@@ -247,7 +396,7 @@ export const CheckoutModal: React.FC = () => {
         <div className="mt-4 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] font-mono text-slate-500 flex items-center justify-between">
           <span className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-accent-emerald" />
-            // [UPI WEBHOOK VERIFICATION POINT] Ready for gateway webhook hookup
+            // [RAZORPAY + UPI WEBHOOK VERIFICATION POINT] Ready for gateway webhook hookup
           </span>
           <span className="text-slate-400 hidden sm:inline font-bold">SHA256 HMAC</span>
         </div>
