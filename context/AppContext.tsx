@@ -278,6 +278,12 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const logout = async () => {
     await supabase.auth.signOut();
     saveUserData(null);
+    setEnrollments([]);
+    setProgress({});
+    setCertificates([]);
+    localStorage.removeItem(STORAGE_KEYS.ENROLLMENTS);
+    localStorage.removeItem(STORAGE_KEYS.PROGRESS);
+    localStorage.removeItem(STORAGE_KEYS.CERTIFICATES);
   };
 
   const openAuthModal = (mode: "login" | "signup" = "login") => {
