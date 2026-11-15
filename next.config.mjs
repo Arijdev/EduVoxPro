@@ -19,7 +19,6 @@ const nextConfig = {
               "connect-src 'self' https://*.supabase.co https://api.razorpay.com",
               "frame-src 'self' https://checkout.razorpay.com",
               "base-uri 'self'",
-              "form-action 'self'",
             ].join("; "),
           },
           {

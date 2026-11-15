@@ -218,15 +218,17 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       throw error;
     }
 
-    if (data?.user) {
-      const loggedUser: SupabaseUser = {
-        id: data.user.id,
-        email: data.user.email || email,
-        fullName: data.user.user_metadata?.full_name || fullName || email.split("@")[0],
-      };
-      saveUserData(loggedUser);
-      setIsAuthModalOpen(false);
+    if (!data?.user) {
+      throw new Error("Authentication failed: no user returned.");
     }
+
+    const loggedUser: SupabaseUser = {
+      id: data.user.id,
+      email: data.user.email || email,
+      fullName: data.user.user_metadata?.full_name || fullName || email.split("@")[0],
+    };
+    saveUserData(loggedUser);
+    setIsAuthModalOpen(false);
   };
 
   const signup = async (email: string, password?: string, fullName?: string) => {
@@ -247,15 +249,17 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       throw error;
     }
 
-    if (data?.user) {
-      const newUser: SupabaseUser = {
-        id: data.user.id,
-        email: data.user.email || email,
-        fullName: fullName || "",
-      };
-      saveUserData(newUser);
-      setIsAuthModalOpen(false);
+    if (!data?.user) {
+      throw new Error("Sign up failed: no user returned.");
     }
+
+    const newUser: SupabaseUser = {
+      id: data.user.id,
+      email: data.user.email || email,
+      fullName: fullName || "",
+    };
+    saveUserData(newUser);
+    setIsAuthModalOpen(false);
   };
 
   const loginWithGoogle = async () => {
