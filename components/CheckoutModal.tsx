@@ -30,11 +30,8 @@ export const CheckoutModal: React.FC = () => {
   const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => setIsMounted(true), []);
-
-  if (!isMounted || !activeCheckoutTrack || !user) return null;
+  if (!activeCheckoutTrack || !user) return null;
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -182,7 +179,9 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+    <div
+      suppressHydrationWarning
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
       <div className="relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl my-8 text-slate-900">
         {/* Close Button */}
         <button
@@ -265,143 +264,113 @@ export const CheckoutModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Razorpay & UPI Payment */}
-          <div className="space-y-4 flex flex-col items-center text-center">
-            {/* Razorpay Checkout Button */}
-            <button
-              type="button"
-              onClick={handleRazorpayPay}
-              disabled={isProcessing || !razorpayLoaded}
-              className={`w-full py-3.5 px-6 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50 ${
-                isProcessing || !razorpayLoaded
-                  ? "bg-slate-200 text-slate-500 border border-slate-200"
-                  : "bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white shadow-indigo-200 border border-transparent"
-              }`}
-            >
-              {isProcessing ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 text-white animate-spin" />
-                  Processing Payment...
-                </span>
-              ) : !razorpayLoaded ? (
-                <span>Loading Razorpay...</span>
-              ) : (
-                <>
-                  <CreditCard className="w-4 h-4" />
-                  <span>Pay with Razorpay</span>
-                </>
-              )}
-            </button>
-
-            {/* Divider */}
-            <div className="w-full flex items-center gap-2">
-              <span className="flex-1 h-[1px] bg-slate-200" />
-              <span className="text-[10px] font-mono text-slate-400 uppercase px-2">OR</span>
-              <span className="flex-1 h-[1px] bg-slate-200" />
-            </div>
-
-            {/* Dynamic QR Code Card */}
-            <div className="relative p-2.5 rounded-2xl bg-white shadow-md border border-slate-200">
-              <img
-                src={qrImageUrl}
-                alt="Direct UPI QR Code"
-                className="w-44 h-44 object-contain rounded-lg"
-              />
-              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-slate-900 text-[10px] font-mono font-bold text-white px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow">
-                <QrCode className="w-3 h-3 text-accent-cyan" />
-                <span>UPI FastScan</span>
+          {/* Right Column: Payment Options */}
+          <div className="space-y-4">
+            {/* Razorpay Section */}
+            <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="w-4 h-4 text-accent-indigo" />
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Razorpay Checkout</span>
               </div>
+
+              <button
+                onClick={handleRazorpayPay}
+                disabled={isProcessing || !razorpayLoaded}
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white font-bold text-xs transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-indigo-200"
+              >
+                {isProcessing ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 text-white animate-spin" />
+                    Processing...
+                  </span>
+                ) : razorpayLoaded ? (
+                  <>
+                    <Zap className="w-4 h-4" /> Pay via Razorpay
+                  </>
+                ) : (
+                  <span>Loading Razorpay...</span>
+                )}
+              </button>
             </div>
 
-            {/* UPI ID Field with Copy Button */}
-            <div className="w-full">
-              <span className="text-[11px] text-slate-500 block mb-1">Copy UPI Merchant VPA:</span>
-              <div className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                <span className="font-mono text-slate-800 font-bold truncate">
-                  {DEFAULT_UPI_CONFIG.merchantVpa}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleCopyVpa}
-                  className="flex items-center gap-1 text-[11px] text-accent-indigo hover:text-indigo-800 font-bold ml-2 shrink-0"
-                >
-                  {copiedVpa ? <Check className="w-3.5 h-3.5 text-accent-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedVpa ? "Copied" : "Copy"}</span>
-                </button>
+            {/* UPI Section */}
+            <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <CreditCard className="w-4 h-4 text-accent-emerald" />
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Direct UPI Payment</span>
               </div>
-            </div>
 
-            {/* Transaction Reference / UTR Input */}
-            <div className="w-full text-left">
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-[11px] font-bold text-slate-700">
-                  Transaction Ref ID / UTR Number
-                </label>
-                <button
-                  type="button"
-                  onClick={handlePasteDemoUtr}
-                  className="text-[10px] text-accent-indigo hover:underline font-mono font-bold"
-                >
-                  Auto-fill Test UTR
-                </button>
+              {/* UPI QR Code */}
+              <div className="flex flex-col items-center mb-4">
+                <img
+                  src={qrImageUrl}
+                  alt="UPI QR Code"
+                  className="w-48 h-48 rounded-xl border border-slate-200 bg-white p-2"
+                />
+                <div className="mt-2 text-xs text-slate-500 font-mono">
+                  Scan to pay {formatINR(activeCheckoutTrack.priceINR)}
+                </div>
               </div>
-              <input
-                type="text"
-                placeholder="e.g. 12-digit UTR or UPI/2026/XXXX"
-                value={transactionRef}
-                onChange={(e) => setTransactionRef(e.target.value)}
-                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 font-mono focus:outline-none focus:border-accent-indigo"
-              />
+
+              {/* UPI ID Field with Copy Button */}
+              <div className="w-full">
+                <span className="text-[11px] text-slate-500 block mb-1">Copy UPI Merchant VPA:</span>
+                <div className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                  <span className="font-mono text-slate-800 font-bold truncate">
+                    {DEFAULT_UPI_CONFIG.merchantVpa}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyVpa}
+                    className="flex items-center gap-1 text-[11px] text-accent-indigo hover:text-indigo-800 font-bold ml-2 shrink-0"
+                  >
+                    {copiedVpa ? <Check className="w-3.5 h-3.5 text-accent-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedVpa ? "Copied" : "Copy"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Transaction Reference / UTR Input */}
+              <div className="w-full text-left">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[11px] font-bold text-slate-700">
+                    Transaction Ref ID / UTR Number
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handlePasteDemoUtr}
+                    className="text-[10px] text-accent-indigo hover:underline font-mono font-bold"
+                  >
+                    Auto-fill Test UTR
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="e.g. 12-digit UTR or UPI/2026/XXXX"
+                  value={transactionRef}
+                  onChange={(e) => setTransactionRef(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 font-mono focus:outline-none focus:border-accent-indigo"
+                />
+              </div>
+
+              <button
+                onClick={handleSimulateWebhookPayment}
+                disabled={isProcessing}
+                className="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors"
+              >
+                Verify UTR & Unlock
+              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Status Message */}
-        {webhookMessage && (
-          <div className="mt-4 p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-accent-indigo text-xs flex items-center gap-2 font-medium">
-            <Sparkles className="w-4 h-4 shrink-0 animate-pulse" />
-            <span>{webhookMessage}</span>
-          </div>
-        )}
-
-        {/* Action Buttons: Simulator & Submit */}
-        <div className="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center gap-3">
-          <button
-            type="button"
-            onClick={handleSimulateWebhookPayment}
-            disabled={isProcessing}
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-accent-indigo hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition-all active:scale-98 disabled:opacity-50"
-          >
-            {isProcessing ? (
-              <span className="flex items-center gap-2 text-white font-bold">
-                <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                Triggering Webhook...
+            {/* Developer Integration Callout */}
+            <div className="mt-4 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] font-mono text-slate-500 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-accent-emerald" />
+                // [RAZORPAY + UPI WEBHOOK VERIFICATION POINT] Ready for gateway webhook hookup
               </span>
-            ) : (
-              <>
-                <Zap className="w-4 h-4 text-white fill-current" />
-                <span>Simulate Payment Success (Webhook Trigger)</span>
-              </>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleSimulateWebhookPayment}
-            disabled={isProcessing}
-            className="w-full sm:w-auto py-3 px-4 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors"
-          >
-            Verify UTR & Unlock
-          </button>
-        </div>
-
-        {/* Developer Integration Callout */}
-        <div className="mt-4 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] font-mono text-slate-500 flex items-center justify-between">
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-accent-emerald" />
-            // [RAZORPAY + UPI WEBHOOK VERIFICATION POINT] Ready for gateway webhook hookup
-          </span>
-          <span className="text-slate-400 hidden sm:inline font-bold">SHA256 HMAC</span>
+              <span className="text-slate-400 hidden sm:inline font-bold">SHA256 HMAC</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
