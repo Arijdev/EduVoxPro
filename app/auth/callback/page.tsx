@@ -13,7 +13,6 @@ export default function AuthCallback() {
     if (typeof window === "undefined") return;
 
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
     const error = params.get("error");
     const errorDescription = params.get("error_description");
 
@@ -22,23 +21,15 @@ export default function AuthCallback() {
       return;
     }
 
-    if (code) {
-      supabase.auth
-        .exchangeCodeForSession(code)
-        .then(({ data, error: exchangeError }) => {
-          if (exchangeError || !data.session) {
-            router.replace(
-              `/login?error=${encodeURIComponent(
-                exchangeError?.message || "OAuth session exchange failed"
-              )}`
-            );
-            return;
-          }
-          router.replace("/dashboard");
-        });
-    } else {
-      router.replace("/login?error=No authorization code received");
-    }
+    // Supabase handles OAuth code exchange internally via cookies on its /auth/v1/callback
+    // endpoint, then redirects here. Just check if a session now exists.
+    supabase.auth.getSession().then(({ data: { session }, error: sessionError }) => {
+      if (sessionError || !session) {
+        router.replace("/login?error=No authorization code received");
+        return;
+      }
+      router.replace("/dashboard");
+    });
   }, [router]);
 
   return null;
