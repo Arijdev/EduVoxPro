@@ -2,27 +2,20 @@ import type { MetadataRoute } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://EduVoxPro.dev";
+  const baseUrl = "https://eduvoxpro.dev";
+  const lastModified = new Date();
 
-  const staticRoutes = [
-    "",
-    "/about",
-    "/courses",
-    "/contact",
-    "/dashboard",
-    "/login",
-    "/signup",
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: route === "" ? ("weekly" as const) : ("monthly" as const),
-    priority: route === "" ? 1 : 0.7,
-  }));
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/`, lastModified, changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/about`, lastModified, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/courses`, lastModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/contact`, lastModified, changeFrequency: "monthly", priority: 0.6 },
+  ];
 
-  const trackRoutes = TRACKS.map((track) => ({
+  const trackRoutes: MetadataRoute.Sitemap = TRACKS.map((track) => ({
     url: `${baseUrl}/learn/${track.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
+    lastModified,
+    changeFrequency: "monthly",
     priority: 0.8,
   }));
 

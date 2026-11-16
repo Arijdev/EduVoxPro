@@ -19,27 +19,78 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const siteUrl = "https://eduvoxpro.dev";
+
 export const metadata: Metadata = {
-  title: "EduVoxPro | Deep Tech Mastery & Verifiable Certifications",
-  description: "Comprehensive 7-10 module tech certification tracks with 2 completely free tracks. High-density documentation, code architectures, 80% MCQ checkpoints, and verifiable credentials.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "EduVoxPro | Engineering Certifications & Verifiable Credentials",
+    template: "%s | EduVoxPro",
+  },
+  description:
+    "Structured 7–10 module engineering certification tracks with rigorous 80% assessments and verifiable credentials. Includes free tracks in web and AI foundations.",
   keywords: [
-    "Tech Certifications",
-    "Agentic AI Developer",
-    "Generative AI Specialist",
-    "Full-Stack Architect",
-    "Free Web Development Certification",
-    "AI Prompt Engineering & Ethics",
-    "EduVoxPro"
+    "engineering certifications",
+    "verifiable credentials",
+    "agentic AI certification",
+    "full-stack developer certification",
+    "free web development course",
+    "AI prompt engineering course",
+    "EduVoxPro",
   ],
-  authors: [{ name: "EduVoxPro Team" }],
+  authors: [{ name: "EduVoxPro" }],
+  creator: "EduVoxPro",
+  publisher: "EduVoxPro",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "EduVoxPro | High-Impact Tech Certifications",
-    description: "Deep, education-first technical certifications with 2 completely free tracks. Verified on Supabase.",
-    url: "https://eduvoxpro.dev",
+    title: "EduVoxPro | Engineering Certifications & Verifiable Credentials",
+    description:
+      "Master production engineering with structured tracks, 80%+ assessments, and instantly verifiable certificates.",
+    url: siteUrl,
     siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "EduVoxPro | Engineering Certifications & Credentials",
+    description:
+      "Structured engineering tracks with rigorous assessments and verifiable certificates from EduVoxPro.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  category: "education",
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: "EduVoxPro",
+  alternateName: "EduVoxPro Institute of Technical Mastery",
+  url: siteUrl,
+  logo: `${siteUrl}/eduvoxpro-logo.svg`,
+  description:
+    "EduVoxPro delivers structured engineering certification tracks with rigorous assessments and verifiable credentials.",
+  sameAs: ["https://eduvoxpro.dev", "https://eduboxpro.in"],
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "support@eduvoxpro.dev",
+      availableLanguage: ["en"],
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -54,18 +105,17 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <meta charSet="UTF-8" />
-      </head>
       <body
         className="bg-canvas text-ink min-h-screen flex flex-col selection:bg-accent/15 selection:text-accent antialiased"
         suppressHydrationWarning
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <AppContextProvider>
           <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
+          <main className="flex-1">{children}</main>
           <Footer />
           <AuthModal />
           <CheckoutModal />

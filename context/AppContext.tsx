@@ -343,8 +343,8 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         amount_paid_inr: track.priceINR,
         enrolled_at: newEnrollment.enrolledAt,
       });
-    } catch (e) {
-      console.log("[Supabase] Enrollment saved locally", e);
+    } catch {
+      // Supabase persistence failed; local state is authoritative for this session.
     }
 
     const updatedEnrollments = [...enrollments.filter(e => e.trackId !== track.id), newEnrollment];
@@ -492,9 +492,9 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
               badge_role: earnedCert.badgeRole,
               is_free_track: track.isFree,
             });
-          } catch (e) {
-            console.log("[Supabase] Certificate saved locally", e);
-          }
+        } catch {
+          // Supabase persistence failed; certificate remains in local state.
+        }
 
           // Update enrollment status to completed
           const updatedEnrollments = enrollments.map(e => 

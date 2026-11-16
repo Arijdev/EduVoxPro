@@ -3,8 +3,9 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   images: {
-    domains: ['images.unsplash.com', 'api.qrserver.com'],
+    domains: ["images.unsplash.com", "api.qrserver.com"],
   },
   async headers() {
     const scriptSrc = [
@@ -30,7 +31,10 @@ const nextConfig = {
               "img-src 'self' https://images.unsplash.com https://api.qrserver.com data:",
               "connect-src 'self' https://*.supabase.co https://*.razorpay.com https://lumberjack.razorpay.com",
               "frame-src 'self' https://api.razorpay.com https://*.razorpay.com",
+              "frame-ancestors 'none'",
               "base-uri 'self'",
+              "form-action 'self'",
+              "object-src 'none'",
             ].join("; "),
           },
           {
@@ -47,11 +51,12 @@ const nextConfig = {
           },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains",
+            value: "max-age=31536000; includeSubDomains; preload",
           },
           {
             key: "Permissions-Policy",
-            value: "accelerometer=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\"), gyroscope=(self \"https://api.razorpay.com\"), magnetometer=(self), payment=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\")",
+            value:
+              "accelerometer=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\"), gyroscope=(self \"https://api.razorpay.com\"), magnetometer=(), camera=(), microphone=(), geolocation=(), payment=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\")",
           },
         ],
       },

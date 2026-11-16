@@ -91,19 +91,31 @@ export default function LearnWorkspacePage() {
   const courseJsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    "name": track.title,
-    "description": track.description,
-    "provider": { "@type": "Organization", "name": "EduVoxPro" },
-    "educationalCredentialAwarded": {
-      "@type": "EducationalOccupationalCredential",
-      "name": `${track.title} Certificate of Mastery`,
-      "credentialCategory": "Certificate"
+    name: track.title,
+    description: track.description,
+    url: `https://eduvoxpro.dev/learn/${track.slug}`,
+    provider: {
+      "@type": "EducationalOrganization",
+      name: "EduVoxPro",
+      sameAs: "https://eduvoxpro.dev",
     },
-    "offers": {
+    educationalCredentialAwarded: {
+      "@type": "EducationalOccupationalCredential",
+      name: `${track.title} Certificate of Mastery`,
+      credentialCategory: "Certificate",
+    },
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "online",
+      courseWorkload: `PT${track.estimatedHours}H`,
+    },
+    offers: {
       "@type": "Offer",
-      "price": track.isFree ? "0" : track.priceINR.toString(),
-      "priceCurrency": "INR"
-    }
+      price: track.isFree ? "0" : track.priceINR.toString(),
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+      url: `https://eduvoxpro.dev/learn/${track.slug}`,
+    },
   };
 
   const handleEnroll = async () => {

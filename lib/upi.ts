@@ -76,23 +76,26 @@ export function generateUPIQrUrl(payload: UPIOrderPayload, config: UPIConfig = D
  * }
  * ```
  */
-export async function simulateUPIWebhookVerification(payload: UPIOrderPayload): Promise<{
+export async function simulateUPIWebhookVerification(
+  payload: UPIOrderPayload
+): Promise<{
   success: boolean;
   paymentId: string;
   timestamp: string;
   message: string;
 }> {
-  console.log("[UPI WEBHOOK VERIFICATION POINT] Simulating incoming payment gateway webhook...", payload);
-
-  // Simulate network roundtrip latency
+  // Local demo simulation only: does not grant server-side fulfillment.
   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  const paymentId = `PAY-UPI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+  const paymentId = `PAY-UPI-${Date.now().toString(36).toUpperCase()}-${Math.random()
+    .toString(36)
+    .substring(2, 6)
+    .toUpperCase()}`;
 
   return {
     success: true,
     paymentId,
     timestamp: new Date().toISOString(),
-    message: `Payment of ₹${payload.amountINR} confirmed via UPI gateway webhook. Transaction ID: ${payload.transactionRef}`,
+    message: `Simulated confirmation for ₹${payload.amountINR}.`,
   };
 }

@@ -68,8 +68,8 @@ export const CheckoutModal: React.FC = () => {
       await navigator.clipboard.writeText(DEFAULT_UPI_CONFIG.merchantVpa);
       setCopiedVpa(true);
       setTimeout(() => setCopiedVpa(false), 2000);
-    } catch (err) {
-      console.warn("Failed to copy UPI ID", err);
+    } catch {
+      // Clipboard not available
     }
   };
 

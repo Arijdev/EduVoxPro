@@ -143,6 +143,30 @@ export default function CertificatePage() {
     ? `${origin}/certificate/${encodeURIComponent(certificate.verificationId)}`
     : `${origin}/certificate/${encodeURIComponent(certParamId)}`;
 
+  const credentialJsonLd = certificate
+    ? {
+        "@context": "https://schema.org",
+        "@type": "EducationalOccupationalCredential",
+        name: `${certificate.trackTitle} Certificate of Mastery`,
+        description: `Verifiable EduVoxPro credential issued to ${certificate.studentName} for ${certificate.trackTitle}.`,
+        credentialCategory: "Certificate",
+        url: verifyUrl,
+        identifier: {
+          "@type": "PropertyValue",
+          name: "Verification ID",
+          value: certificate.verificationId,
+        },
+        recognizedBy: {
+          "@type": "EducationalOrganization",
+          name: "EduVoxPro",
+          url: "https://eduvoxpro.dev",
+        },
+        educationalLevel: "Professional certification",
+        competencyRequired: track?.skillsCovered?.length ? track.skillsCovered : undefined,
+        validIn: { "@type": "Place", name: "Worldwide" },
+      }
+    : null;
+
   const handlePrint = () => window.print();
 
   const handleCopyVerificationLink = async () => {
@@ -199,6 +223,12 @@ export default function CertificatePage() {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 space-y-6 bg-background">
+      {credentialJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(credentialJsonLd) }}
+        />
+      )}
       {/* Top Action Bar (hidden in print) */}
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print pb-4 border-b border-border">
         <Link
