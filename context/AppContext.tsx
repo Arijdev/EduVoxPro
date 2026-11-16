@@ -21,8 +21,8 @@ interface AppContextType {
   authModalMode: "login" | "signup";
   activeCheckoutTrack: Track | null;
   // Auth actions
-  login: (email: string, password?: string, fullName?: string) => Promise<void>;
-  signup: (email: string, password?: string, fullName?: string) => Promise<void>;
+  login: (email: string, password?: string, fullName?: string, turnstileToken?: string) => Promise<void>;
+  signup: (email: string, password?: string, fullName?: string, turnstileToken?: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   openAuthModal: (mode?: "login" | "signup") => void;
@@ -209,12 +209,23 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   // Auth Functions
-  const login = async (email: string, password?: string, fullName?: string) => {
+  const login = async (email: string, password?: string, fullName?: string, turnstileToken?: string) => {
     if (!password) {
       throw new Error("Password is required");
     }
+
+    const verifyRes = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ turnstileToken: turnstileToken || "" }),
+    });
+    if (!verifyRes.ok) {
+      const data = await verifyRes.json().catch(() => ({}));
+      throw new Error(data.error || "Verification failed. Please try again.");
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    
+
     if (error) {
       throw error;
     }
@@ -232,10 +243,21 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setIsAuthModalOpen(false);
   };
 
-  const signup = async (email: string, password?: string, fullName?: string) => {
+  const signup = async (email: string, password?: string, fullName?: string, turnstileToken?: string) => {
     if (!password) {
       throw new Error("Password is required");
     }
+
+    const verifyRes = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ turnstileToken: turnstileToken || "" }),
+    });
+    if (!verifyRes.ok) {
+      const data = await verifyRes.json().catch(() => ({}));
+      throw new Error(data.error || "Verification failed. Please try again.");
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,

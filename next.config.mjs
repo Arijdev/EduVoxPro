@@ -16,6 +16,7 @@ const nextConfig = {
       "https://cdn.razorpay.com",
       "https://*.razorpay.com",
       "https://api.qrserver.com",
+      "https://challenges.cloudflare.com",
     ];
 
     return [
@@ -29,8 +30,8 @@ const nextConfig = {
               `script-src ${scriptSrc.join(" ")}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' https://images.unsplash.com https://api.qrserver.com data:",
-              "connect-src 'self' https://*.supabase.co https://*.razorpay.com https://lumberjack.razorpay.com",
-              "frame-src 'self' https://api.razorpay.com https://*.razorpay.com",
+              "connect-src 'self' https://*.supabase.co https://*.razorpay.com https://lumberjack.razorpay.com https://challenges.cloudflare.com",
+              "frame-src 'self' https://api.razorpay.com https://*.razorpay.com https://challenges.cloudflare.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
