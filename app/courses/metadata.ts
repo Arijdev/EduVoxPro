@@ -1,9 +1,9 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Certification Course Catalog | EduVoxPro",
   description:
-    "Browse all EduVoxPro certification tracks. Comprehensive 7â€“10 module engineering curricula with 80% MCQ checkpoints and verifiable credentials. 2 completely free tracks available.",
+    "Browse all EduVoxPro certification tracks. Comprehensive 7–10 module engineering curricula with 80% MCQ checkpoints and verifiable credentials. 2 completely free tracks available.",
   keywords: [
     "Certification Courses",
     "Tech Certification Tracks",

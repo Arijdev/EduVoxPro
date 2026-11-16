@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -134,7 +134,7 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* â”€â”€â”€ Tab 1: Enrolled Tracks â”€â”€â”€ */}
+      {/* ─── Tab 1: Enrolled Tracks ─── */}
       {activeTab === "tracks" && (
         <div className="space-y-6">
           {enrolledTrackObjects.length > 0 ? (
@@ -250,7 +250,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* â”€â”€â”€ Tab 2: My Certificates â”€â”€â”€ */}
+      {/* ─── Tab 2: My Certificates ─── */}
       {activeTab === "certificates" && (
         <div className="space-y-6">
           {certificates.length > 0 ? (

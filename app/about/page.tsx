@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -35,7 +35,7 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-20 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* â”€â”€â”€ Hero Section â”€â”€â”€ */}
+      {/* ─── Hero Section ─── */}
       <section className="relative pt-20 sm:pt-32 pb-16 text-center overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] bg-gradient-to-tr from-indigo-100/40 via-sky-50/30 to-emerald-100/20 blur-[140px] rounded-full pointer-events-none -z-10" />
 
@@ -98,7 +98,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* â”€â”€â”€ Mission & Approach â”€â”€â”€ */}
+      {/* ─── Mission & Approach ─── */}
       <section className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <span className="text-xs font-mono uppercase text-accent-indigo font-bold tracking-wider">
@@ -115,7 +115,7 @@ export default function AboutPage() {
           <ul className="space-y-3">
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
-              <span>7â€“10 module curricula per certification track</span>
+              <span>7–10 module curricula per certification track</span>
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
@@ -127,7 +127,7 @@ export default function AboutPage() {
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
-              <span>Direct UPI checkout â€” zero gateway markup on paid tracks</span>
+              <span>Direct UPI checkout — zero gateway markup on paid tracks</span>
             </li>
           </ul>
         </div>

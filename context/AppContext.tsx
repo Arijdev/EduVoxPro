@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { 
@@ -103,14 +103,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
           syncUserDataFromSupabase(currentUser.id);
         } else {
-          // No active Supabase session â€“ clear any leftover auth state
+          // No active Supabase session – clear any leftover auth state
           supabase.auth.signOut().catch(() => {});
           localStorage.removeItem(STORAGE_KEYS.USER);
           setUser(null);
         }
       })
       .catch(() => {
-        // Supabase unreachable â€“ keep unauthenticated state, app still works
+        // Supabase unreachable – keep unauthenticated state, app still works
         localStorage.removeItem(STORAGE_KEYS.USER);
         setUser(null);
       });

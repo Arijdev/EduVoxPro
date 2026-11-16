@@ -1,4 +1,4 @@
-﻿import type { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export default function sitemap(): MetadataRoute.Sitemap {

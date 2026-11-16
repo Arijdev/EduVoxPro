@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -42,9 +42,9 @@ export const Footer: React.FC = () => {
 
           <h4 className="font-semibold text-ink text-xs tracking-[0.12em] uppercase mt-5 mb-3 font-mono">Professional Tracks</h4>
           <ul className="space-y-2 text-xs">
-            <li><Link href="/learn/agentic-ai-developer" className="hover:text-ink transition-colors">Agentic AI Developer (â‚¹99)</Link></li>
-            <li><Link href="/learn/generative-ai-specialist" className="hover:text-ink transition-colors">Generative AI Specialist (â‚¹89)</Link></li>
-            <li><Link href="/learn/modern-fullstack-architect" className="hover:text-ink transition-colors">Modern Full-Stack Architect (â‚¹79)</Link></li>
+            <li><Link href="/learn/agentic-ai-developer" className="hover:text-ink transition-colors">Agentic AI Developer (₹99)</Link></li>
+            <li><Link href="/learn/generative-ai-specialist" className="hover:text-ink transition-colors">Generative AI Specialist (₹89)</Link></li>
+            <li><Link href="/learn/modern-fullstack-architect" className="hover:text-ink transition-colors">Modern Full-Stack Architect (₹79)</Link></li>
           </ul>
         </div>
 

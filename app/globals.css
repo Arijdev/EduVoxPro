@@ -1,16 +1,16 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   EduVoxPro â€” 60-30-10 Light Mode Theme Tokens
+/* ─────────────────────────────────────────────────────────────
+   EduVoxPro — 60-30-10 Light Mode Theme Tokens
    Switch themes by setting data-theme="academic" | "emerald" | "editorial" on <html>.
    Default: Option A (Academic Trust)
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+   ───────────────────────────────────────────────────────────── */
 
 :root,
 [data-theme="academic"] {
-  /* Option A â€” Academic Trust (Deep Royal Blue & Slate) */
+  /* Option A — Academic Trust (Deep Royal Blue & Slate) */
   --color-dominant: #F8FAFC;   /* 60% canvas */
   --color-surface: #FFFFFF;    /* 30% cards/surfaces */
   --color-surface-alt: #F1F5F9;
@@ -28,7 +28,7 @@
 }
 
 [data-theme="emerald"] {
-  /* Option B â€” Modern Engineering (Emerald Forest & Warm Stone) */
+  /* Option B — Modern Engineering (Emerald Forest & Warm Stone) */
   --color-dominant: #FAFAF9;
   --color-surface: #FFFFFF;
   --color-surface-alt: #F5F5F4;
@@ -46,7 +46,7 @@
 }
 
 [data-theme="editorial"] {
-  /* Option C â€” Crisp Editorial (Indigo Ink & Cool Gray) */
+  /* Option C — Crisp Editorial (Indigo Ink & Cool Gray) */
   --color-dominant: #F9FAFB;
   --color-surface: #FFFFFF;
   --color-surface-alt: #F3F4F6;
@@ -115,14 +115,25 @@ body {
     padding: 0 !important;
   }
 
-  .certificate-container {
-    width: 100vw !important;
-    height: 100vh !important;
+  .certificate-scale-wrapper {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
     max-width: none !important;
     border: none !important;
     box-shadow: none !important;
+    overflow: visible !important;
     page-break-inside: avoid !important;
     page-break-after: avoid !important;
+  }
+
+  .certificate-canvas {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1.414 / 1 !important;
+    margin: 0 auto !important;
   }
 
   @page {

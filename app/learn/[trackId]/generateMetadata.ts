@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export async function generateMetadata({

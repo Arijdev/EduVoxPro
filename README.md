@@ -1,80 +1,80 @@
-﻿# EduVoxPro â€” Role-Based Tech Certification Platform
+# EduVoxPro — Role-Based Tech Certification Platform
 
 EduVoxPro is a production-grade, text-first technical certification and learning platform designed for software engineers, architects, and AI practitioners. It features high-density documentation, interactive architectural diagrams, copyable code blocks, 80% MCQ progression gates, direct UPI payment workflows, and cryptographically verifiable print-ready certificates.
 
-## âœ¨ Key Features
+## ✨ Key Features
 
-- **5 Certification Tracks** â€” 2 completely free (Web Foundations, AI Prompt Engineering & Ethics) + 3 paid (Agentic AI Developer, Generative AI Specialist, Modern Full-Stack Architect)
-- **7â€“10 Modules per Track** â€” deep documentation, code architectures, and architectural diagrams
-- **80% MCQ Progression Gate** â€” 5 questions per module; score â‰¥80% to unlock the next chapter
-- **Verifiable Certificates** â€” print-ready diplomas with unique Verification ID and QR code
-- **Direct UPI Checkout** â€” QR code generation, VPA copy, and webhook simulation for paid tracks
-- **Auth & Persistence** â€” email/password + Google OAuth (Supabase), localStorage fallback
-- **Student Dashboard** â€” enrolled tracks, mastery progress, certificate library
-- **SEO Ready** â€” per-page metadata, Open Graph, Twitter cards, sitemap.xml, robots.txt
-- **Error Boundary** â€” graceful error recovery instead of raw 500 pages
+- **5 Certification Tracks** — 2 completely free (Web Foundations, AI Prompt Engineering & Ethics) + 3 paid (Agentic AI Developer, Generative AI Specialist, Modern Full-Stack Architect)
+- **7–10 Modules per Track** — deep documentation, code architectures, and architectural diagrams
+- **80% MCQ Progression Gate** — 5 questions per module; score â‰¥80% to unlock the next chapter
+- **Verifiable Certificates** — print-ready diplomas with unique Verification ID and QR code
+- **Direct UPI Checkout** — QR code generation, VPA copy, and webhook simulation for paid tracks
+- **Auth & Persistence** — email/password + Google OAuth (Supabase), localStorage fallback
+- **Student Dashboard** — enrolled tracks, mastery progress, certificate library
+- **SEO Ready** — per-page metadata, Open Graph, Twitter cards, sitemap.xml, robots.txt
+- **Error Boundary** — graceful error recovery instead of raw 500 pages
 
 ## ðŸ“ Project Structure
 
 ```
 eduvoxpro/
-â”œâ”€â”€ package.json
-â”œâ”€â”€ tsconfig.json
-â”œâ”€â”€ tailwind.config.ts
-â”œâ”€â”€ postcss.config.mjs
-â”œâ”€â”€ next.config.mjs
-â”œâ”€â”€ .env.local
-â”œâ”€â”€ README.md
-â”œâ”€â”€ data/
-â”‚   â””â”€â”€ curriculum.ts           # Track & module definitions, 44 modules, 5 MCQs each
-â”œâ”€â”€ lib/
-â”‚   â”œâ”€â”€ utils.ts                # cn helper, INR formatter, verification ID generator
-â”‚   â”œâ”€â”€ supabase.ts             # Supabase client + SupabaseUser interface
-â”‚   â””â”€â”€ upi.ts                  # UPI deep link, QR generator, webhook simulator
-â”œâ”€â”€ context/
-â”‚   â””â”€â”€ AppContext.tsx          # Global React Context + localStorage persistence
-â”œâ”€â”€ components/
-â”‚   â”œâ”€â”€ Navbar.tsx              # Sticky navigation (Home, Dashboard when logged in, About, Courses, Contact)
-â”‚   â”œâ”€â”€ Footer.tsx              # Technical footer with architecture notes
-â”‚   â”œâ”€â”€ AuthModal.tsx           # Sign In / Sign Up modal with Supabase hooks & Google OAuth
-â”‚   â”œâ”€â”€ CheckoutModal.tsx       # Direct UPI modal with dynamic QR code & Webhook simulator
-â”‚   â”œâ”€â”€ TrackCard.tsx           # Certification track card with role badge, hours, modules & pricing
-â”‚   â”œâ”€â”€ CodeBlock.tsx           # Syntax styled code viewer with line numbers & 1-click copy
-â”‚   â”œâ”€â”€ Callout.tsx             # Pro-tip, Warning, Architecture note callout boxes
-â”‚   â”œâ”€â”€ ArchitectureDiagram.tsx # Responsive diagram viewer (agent-loop, rag-pipeline, microservices, llm-orchestrator)
-â”‚   â””â”€â”€ QuizModule.tsx          # Embedded MCQ quiz with 80% progression lock & certificate trigger
-â”œâ”€â”€ app/
-â”‚   â”œâ”€â”€ layout.tsx              # Root layout with AppContextProvider, Navbar, Footer, modals
-â”‚   â”œâ”€â”€ metadata.ts             # Homepage SEO metadata
-â”‚   â”œâ”€â”€ page.tsx                # Landing page with hero, stats, catalog preview
-â”‚   â”œâ”€â”€ error.tsx               # Global error boundary (replaces raw 500 pages)
-â”‚   â”œâ”€â”€ sitemap.ts              # Auto-generated sitemap.xml
-â”‚   â”œâ”€â”€ robots.ts               # Auto-generated robots.txt
-â”‚   â”œâ”€â”€ about/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # About page: mission, stats, free tracks
-â”‚   â”‚   â””â”€â”€ metadata.ts         # About page SEO
-â”‚   â”œâ”€â”€ courses/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Course catalog with All/Free/Paid filters
-â”‚   â”‚   â””â”€â”€ metadata.ts         # Courses page SEO
-â”‚   â”œâ”€â”€ contact/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Contact page with form, FAQ, social links
-â”‚   â”‚   â””â”€â”€ metadata.ts         # Contact page SEO
-â”‚   â”œâ”€â”€ login/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Dedicated Login page
-â”‚   â”‚   â””â”€â”€ metadata.ts         # Login page SEO (noindex)
-â”‚   â”œâ”€â”€ signup/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Dedicated Sign-Up page
-â”‚   â”‚   â””â”€â”€ metadata.ts         # Signup page SEO (noindex)
-â”‚   â”œâ”€â”€ dashboard/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Student Dashboard (tracks + certificates tabs)
-â”‚   â”‚   â””â”€â”€ metadata.ts         # Dashboard page SEO (noindex)
-â”‚   â”œâ”€â”€ learn/[trackId]/
-â”‚   â”‚   â”œâ”€â”€ page.tsx            # Interactive Learning Workspace with sidebar curriculum tree
-â”‚   â”‚   â””â”€â”€ generateMetadata.ts # Per-track dynamic SEO
-â”‚   â””â”€â”€ certificate/[certificateId]/
-â”‚       â”œâ”€â”€ page.tsx            # Print-ready landscape certificate template
-â”‚       â””â”€â”€ generateMetadata.ts # Per-certificate dynamic SEO
-â””â”€â”€ globals.css                 # Tailwind directives, custom scrollbars, @media print rules
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+├── postcss.config.mjs
+├── next.config.mjs
+├── .env.local
+├── README.md
+├── data/
+│   └── curriculum.ts           # Track & module definitions, 44 modules, 5 MCQs each
+├── lib/
+│   ├── utils.ts                # cn helper, INR formatter, verification ID generator
+│   ├── supabase.ts             # Supabase client + SupabaseUser interface
+│   └── upi.ts                  # UPI deep link, QR generator, webhook simulator
+├── context/
+│   └── AppContext.tsx          # Global React Context + localStorage persistence
+├── components/
+│   ├── Navbar.tsx              # Sticky navigation (Home, Dashboard when logged in, About, Courses, Contact)
+│   ├── Footer.tsx              # Technical footer with architecture notes
+│   ├── AuthModal.tsx           # Sign In / Sign Up modal with Supabase hooks & Google OAuth
+│   ├── CheckoutModal.tsx       # Direct UPI modal with dynamic QR code & Webhook simulator
+│   ├── TrackCard.tsx           # Certification track card with role badge, hours, modules & pricing
+│   ├── CodeBlock.tsx           # Syntax styled code viewer with line numbers & 1-click copy
+│   ├── Callout.tsx             # Pro-tip, Warning, Architecture note callout boxes
+│   ├── ArchitectureDiagram.tsx # Responsive diagram viewer (agent-loop, rag-pipeline, microservices, llm-orchestrator)
+│   └── QuizModule.tsx          # Embedded MCQ quiz with 80% progression lock & certificate trigger
+├── app/
+│   ├── layout.tsx              # Root layout with AppContextProvider, Navbar, Footer, modals
+│   ├── metadata.ts             # Homepage SEO metadata
+│   ├── page.tsx                # Landing page with hero, stats, catalog preview
+│   ├── error.tsx               # Global error boundary (replaces raw 500 pages)
+│   ├── sitemap.ts              # Auto-generated sitemap.xml
+│   ├── robots.ts               # Auto-generated robots.txt
+│   ├── about/
+│   │   ├── page.tsx            # About page: mission, stats, free tracks
+│   │   └── metadata.ts         # About page SEO
+│   ├── courses/
+│   │   ├── page.tsx            # Course catalog with All/Free/Paid filters
+│   │   └── metadata.ts         # Courses page SEO
+│   ├── contact/
+│   │   ├── page.tsx            # Contact page with form, FAQ, social links
+│   │   └── metadata.ts         # Contact page SEO
+│   ├── login/
+│   │   ├── page.tsx            # Dedicated Login page
+│   │   └── metadata.ts         # Login page SEO (noindex)
+│   ├── signup/
+│   │   ├── page.tsx            # Dedicated Sign-Up page
+│   │   └── metadata.ts         # Signup page SEO (noindex)
+│   ├── dashboard/
+│   │   ├── page.tsx            # Student Dashboard (tracks + certificates tabs)
+│   │   └── metadata.ts         # Dashboard page SEO (noindex)
+│   ├── learn/[trackId]/
+│   │   ├── page.tsx            # Interactive Learning Workspace with sidebar curriculum tree
+│   │   └── generateMetadata.ts # Per-track dynamic SEO
+│   └── certificate/[certificateId]/
+│       ├── page.tsx            # Print-ready landscape certificate template
+│       └── generateMetadata.ts # Per-certificate dynamic SEO
+└── globals.css                 # Tailwind directives, custom scrollbars, @media print rules
 ```
 
 ## ðŸƒ Running the Application
@@ -108,7 +108,7 @@ npm run lint
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    ```
 
-2. Apply the schema in `supabase/schema.sql` to your Supabase project â€” it creates:
+2. Apply the schema in `supabase/schema.sql` to your Supabase project — it creates:
    - `profiles`, `tracks`, `modules`, `lessons`, `quizzes`, `questions`
    - `enrollments`, `user_progress`, `certificates`
    - Row Level Security (RLS) policies on all tables
@@ -122,7 +122,7 @@ npm run lint
 
 To connect a real payment gateway (Razorpay / Cashfree / PhonePe / Decentro):
 
-1. Update `lib/upi.ts` â€” `DEFAULT_UPI_CONFIG.merchantVpa` to your verified Merchant VPA.
+1. Update `lib/upi.ts` — `DEFAULT_UPI_CONFIG.merchantVpa` to your verified Merchant VPA.
 2. Create `app/api/webhooks/upi/route.ts` to validate HMAC signatures:
    ```ts
    import crypto from 'crypto';
@@ -135,9 +135,9 @@ To connect a real payment gateway (Razorpay / Cashfree / PhonePe / Decentro):
 
 ## ðŸŽ¨ Color System (60-30-10)
 
-- **60% Dominant:** `bg-background` (#F8FAFC) â€” light canvas
+- **60% Dominant:** `bg-background` (#F8FAFC) — light canvas
 - **30% Secondary:** `text-slate-900` headings, `text-slate-600` body, white surface cards
-- **10% Accent:** indigo (#4F46E5), cyan (#0284C7), emerald (#059669) â€” CTAs, links, badges
+- **10% Accent:** indigo (#4F46E5), cyan (#0284C7), emerald (#059669) — CTAs, links, badges
 
 ## ðŸ“± Pages
 
@@ -163,11 +163,11 @@ To connect a real payment gateway (Razorpay / Cashfree / PhonePe / Decentro):
 
 ## ðŸ“Š Data Model
 
-- **Tracks** â€” id, slug, title, roleBadge, difficulty, priceINR, isFree, modulesCount, skillsCovered
-- **Modules** â€” id, trackId, orderIndex, title, summary, contentSections, quiz (5 questions)
-- **Enrollments** â€” userId, trackId, status, paymentReference, amountPaidINR
-- **UserProgress** â€” completedModuleIds, unlockedModuleIds, quizScores, lastActiveModuleId
-- **Certificates** â€” verificationId, trackId, studentName, trackTitle, scoreAverage, skillsCertified
+- **Tracks** — id, slug, title, roleBadge, difficulty, priceINR, isFree, modulesCount, skillsCovered
+- **Modules** — id, trackId, orderIndex, title, summary, contentSections, quiz (5 questions)
+- **Enrollments** — userId, trackId, status, paymentReference, amountPaidINR
+- **UserProgress** — completedModuleIds, unlockedModuleIds, quizScores, lastActiveModuleId
+- **Certificates** — verificationId, trackId, studentName, trackTitle, scoreAverage, skillsCertified
 
 All data persists to `localStorage` by default and syncs to Supabase when connected.
 

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
@@ -48,8 +48,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="academic" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-canvas text-ink min-h-screen flex flex-col selection:bg-accent/15 selection:text-accent antialiased">
+    <html
+      lang="en"
+      data-theme="academic"
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta charSet="UTF-8" />
+      </head>
+      <body
+        className="bg-canvas text-ink min-h-screen flex flex-col selection:bg-accent/15 selection:text-accent antialiased"
+        suppressHydrationWarning
+      >
         <AppContextProvider>
           <Navbar />
           <main className="flex-1">

@@ -1,9 +1,9 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "EduVoxPro | Deep Tech Mastery & Verifiable Certifications",
   description:
-    "Comprehensive 7â€“10 module tech certification tracks with 2 completely free tracks. High-density documentation, code architectures, 80% MCQ checkpoints, and verifiable credentials. Free Web Development and AI Prompt Engineering certifications.",
+    "Comprehensive 7–10 module tech certification tracks with 2 completely free tracks. High-density documentation, code architectures, 80% MCQ checkpoints, and verifiable credentials. Free Web Development and AI Prompt Engineering certifications.",
   keywords: [
     "Tech Certifications",
     "Agentic AI Developer",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "EduVoxPro | Deep Tech Mastery & Verifiable Certifications",
     description:
-      "Comprehensive 7â€“10 module tech certification tracks with 2 completely free tracks.",
+      "Comprehensive 7–10 module tech certification tracks with 2 completely free tracks.",
     images: ["/og-image.jpg"],
   },
   robots: {

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -125,7 +125,7 @@ export default function LearnWorkspacePage() {
     router.push(`/checkout/${track.slug}`);
   };
 
-  // â”€â”€ Enrollment Gate â”€â”€
+  // ── Enrollment Gate ──
   if (!enrolled) {
     return (
       <div
@@ -205,7 +205,7 @@ export default function LearnWorkspacePage() {
     );
   }
 
-  // â”€â”€ Learning Workspace â”€â”€
+  // ── Learning Workspace ──
   return (
     <div
       className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]"
@@ -230,7 +230,7 @@ export default function LearnWorkspacePage() {
         </span>
       </div>
 
-      {/* â”€â”€â”€ Left Sidebar: Curriculum Tree â”€â”€â”€ */}
+      {/* ─── Left Sidebar: Curriculum Tree ─── */}
       <aside
         className={`fixed lg:sticky top-16 left-0 z-30 w-80 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 lg:translate-x-0 shadow-lg lg:shadow-none ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -361,7 +361,7 @@ export default function LearnWorkspacePage() {
         />
       )}
 
-      {/* â”€â”€â”€ Main Content Viewer â”€â”€â”€ */}
+      {/* ─── Main Content Viewer ─── */}
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12 space-y-10 min-w-0">
         {activeModule ? (
           <article className="space-y-10">
@@ -459,7 +459,7 @@ export default function LearnWorkspacePage() {
                       <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
                         {section.items.map((item, itemIdx) => (
                           <li key={itemIdx} className="flex items-start gap-2">
-                            <span className="text-accent-indigo font-bold mt-0.5">â€¢</span>
+                            <span className="text-accent-indigo font-bold mt-0.5">•</span>
                             <span>{item}</span>
                           </li>
                         ))}
