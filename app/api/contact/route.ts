@@ -41,7 +41,11 @@ export async function POST(req: Request) {
     }
 
     const token = typeof payload.turnstileToken === "string" ? payload.turnstileToken : "";
-    const ok = await verifyTurnstileToken(token, ip);
+    const ok = await verifyTurnstileToken({
+      token,
+      ip,
+      expectedAction: "contact",
+    });
     if (!ok) {
       return NextResponse.json(
         { error: "Verification failed. Please confirm you are human and try again." },

@@ -204,6 +204,7 @@ export const AuthModal: React.FC = () => {
               <Turnstile
                 ref={turnstileRef}
                 siteKey={TURNSTILE_SITE_KEY}
+                options={{ action: mode === "login" ? "login" : "signup" }}
                 onSuccess={(token) => setTurnstileToken(token)}
                 onExpire={() => setTurnstileToken(null)}
                 onError={() => setTurnstileToken(null)}
