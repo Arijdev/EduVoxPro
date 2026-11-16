@@ -43,7 +43,7 @@ export default function CertificatePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [origin, setOrigin] = useState("https://eduvoxpro.dev");
+  const [origin, setOrigin] = useState("https://www.eduvoxpro.in");
 
   // Fixed-resolution proportional scaling (800x566 reference canvas)
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -159,7 +159,7 @@ export default function CertificatePage() {
         recognizedBy: {
           "@type": "EducationalOrganization",
           name: "EduVoxPro",
-          url: "https://eduvoxpro.dev",
+          url: "https://www.eduvoxpro.in",
         },
         educationalLevel: "Professional certification",
         competencyRequired: track?.skillsCovered?.length ? track.skillsCovered : undefined,

@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
+import { siteUrl, siteName } from "../metadata";
 
 export const metadata: Metadata = {
   title: "Student Dashboard | EduVoxPro",
   description:
     "Your EduVoxPro student dashboard. Track enrolled courses, module progress, and verifiable certificates.",
   keywords: ["Student Dashboard", "My Courses", "Certificate Progress"],
-  authors: [{ name: "EduVoxPro Team" }],
+  authors: [{ name: `${siteName} Team` }],
   openGraph: {
     title: "Student Dashboard | EduVoxPro",
     description:
       "Track enrolled courses, module progress, and verifiable certificates.",
-    url: "https://EduVoxPro.dev/dashboard",
-    siteName: "EduVoxPro",
+    url: `${siteUrl}/dashboard`,
+    siteName,
     locale: "en_US",
     type: "website",
   },
@@ -26,7 +27,6 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: "https://EduVoxPro.dev/dashboard",
+    canonical: "/dashboard",
   },
 };
-

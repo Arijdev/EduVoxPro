@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AuthModal } from "@/components/AuthModal";
 import { CheckoutModal } from "@/components/CheckoutModal";
+import { siteUrl, siteName, siteTitle, siteDescription } from "./metadata";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,16 +20,10 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://eduvoxpro.dev";
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "EduVoxPro | Engineering Certifications & Verifiable Credentials",
-    template: "%s | EduVoxPro",
-  },
-  description:
-    "Structured 7–10 module engineering certification tracks with rigorous 80% assessments and verifiable credentials. Includes free tracks in web and AI foundations.",
+  title: siteTitle,
+  description: siteDescription,
   keywords: [
     "engineering certifications",
     "verifiable credentials",
@@ -38,18 +33,18 @@ export const metadata: Metadata = {
     "AI prompt engineering course",
     "EduVoxPro",
   ],
-  authors: [{ name: "EduVoxPro" }],
-  creator: "EduVoxPro",
-  publisher: "EduVoxPro",
+  authors: [{ name: siteName }],
+  creator: siteName,
+  publisher: siteName,
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "EduVoxPro | Engineering Certifications & Verifiable Credentials",
+    title: siteTitle,
     description:
       "Master production engineering with structured tracks, 80%+ assessments, and instantly verifiable certificates.",
     url: siteUrl,
-    siteName: "EduVoxPro",
+    siteName,
     locale: "en_US",
     type: "website",
   },
@@ -76,13 +71,13 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
-  name: "EduVoxPro",
+  name: siteName,
   alternateName: "EduVoxPro Institute of Technical Mastery",
   url: siteUrl,
   logo: `${siteUrl}/eduvoxpro-logo.svg`,
   description:
     "EduVoxPro delivers structured engineering certification tracks with rigorous assessments and verifiable credentials.",
-  sameAs: ["https://eduvoxpro.dev", "https://eduboxpro.in"],
+  sameAs: [siteUrl, "https://eduboxpro.in"],
   contactPoint: [
     {
       "@type": "ContactPoint",

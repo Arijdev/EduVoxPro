@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { siteUrl, siteName } from "../metadata";
 
 export const metadata: Metadata = {
   title: "Sign In | EduVoxPro",
   description:
     "Sign in to your EduVoxPro account. Access your courses, progression checkpoints, and verifiable certificates.",
   keywords: ["Login", "Sign In", "EduVoxPro Account"],
-  authors: [{ name: "EduVoxPro Team" }],
+  authors: [{ name: `${siteName} Team` }],
   openGraph: {
     title: "Sign In | EduVoxPro",
     description: "Access your courses, progression checkpoints, and certificates.",
-    url: "https://EduVoxPro.dev/login",
-    siteName: "EduVoxPro",
+    url: `${siteUrl}/login`,
+    siteName,
     locale: "en_US",
     type: "website",
   },
@@ -25,7 +26,6 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: "https://EduVoxPro.dev/login",
+    canonical: "/login",
   },
 };
-

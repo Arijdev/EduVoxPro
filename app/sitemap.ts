@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://eduvoxpro.dev";
+  const baseUrl = "https://www.eduvoxpro.in";
   const lastModified = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [

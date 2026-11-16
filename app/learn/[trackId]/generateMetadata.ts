@@ -33,13 +33,13 @@ export async function generateMetadata({
     openGraph: {
       title: `${track.title} | EduVoxPro`,
       description: track.description,
-      url: `https://EduVoxPro.dev/learn/${track.slug}`,
+      url: `https://www.eduvoxpro.in/learn/${track.slug}`,
       siteName: "EduVoxPro",
       locale: "en_US",
-      type: "website",
+type: "website",
       images: [
         {
-          url: "/og-image.jpg",
+          url: "/opengraph-image",
           width: 1200,
           height: 630,
           alt: track.title,
@@ -50,14 +50,14 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${track.title} | EduVoxPro`,
       description: track.description,
-      images: ["/og-image.jpg"],
+      images: ["/opengraph-image"],
     },
     robots: {
       index: true,
       follow: true,
     },
     alternates: {
-      canonical: `https://EduVoxPro.dev/learn/${track.slug}`,
+      canonical: `https://www.eduvoxpro.in/learn/${track.slug}`,
     },
   };
 }

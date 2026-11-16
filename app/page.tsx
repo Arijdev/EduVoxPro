@@ -56,7 +56,7 @@ export default function HomePage() {
       {
         "@type": "EducationalOrganization",
         name: "EduVoxPro",
-        url: "https://eduvoxpro.dev",
+        url: "https://www.eduvoxpro.in",
         description:
           "Structured engineering certification tracks with rigorous assessments and verifiable credentials.",
       },
@@ -64,18 +64,18 @@ export default function HomePage() {
         "@type": "Course",
         name: track.title,
         description: track.description,
-        url: `https://eduvoxpro.dev/learn/${track.slug}`,
+        url: `https://www.eduvoxpro.in/learn/${track.slug}`,
         provider: {
           "@type": "EducationalOrganization",
           name: "EduVoxPro",
-          sameAs: "https://eduvoxpro.dev",
+          sameAs: "https://www.eduvoxpro.in",
         },
         offers: {
           "@type": "Offer",
           price: track.isFree ? "0" : track.priceINR.toString(),
           priceCurrency: "INR",
           availability: "https://schema.org/InStock",
-          url: `https://eduvoxpro.dev/learn/${track.slug}`,
+          url: `https://www.eduvoxpro.in/learn/${track.slug}`,
         },
         educationalCredentialAwarded: {
           "@type": "EducationalOccupationalCredential",
@@ -261,7 +261,7 @@ export default function HomePage() {
                         <div className="flex flex-col items-end justify-end text-right gap-1.5 pb-1">
                           <div className="p-1 bg-white border border-[#E2E8F0]">
                               <img
-                                src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://eduvoxpro.dev/certificate/EDV-2026-AIA-8F3K2Q"
+                                src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://www.eduvoxpro.in/certificate/EDV-2026-AIA-8F3K2Q"
                                 alt="Sample EduVoxPro credential verification QR code"
                                 className="w-[64px] h-[64px] block"
                               />

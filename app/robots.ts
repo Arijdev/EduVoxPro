@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://eduvoxpro.dev";
+  const baseUrl = "https://www.eduvoxpro.in";
 
   return {
     rules: [
@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    host: "www.eduvoxpro.in",
   };
 }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const siteUrl = "https://eduvoxpro.dev";
+const siteUrl = "https://www.eduvoxpro.in";
 
 function trim(str: string, max: number) {
   return str.length <= max ? str : `${str.slice(0, max - 1).trimEnd()}…`;
@@ -19,7 +19,7 @@ export async function generateMetadata({
 
   const title = trim(`Verify Credential ${safeId} | EduVoxPro`, 60);
   const description = trim(
-    `Verify EduVoxPro credential ${safeId}. View the official certificate, issue details, and validation status on eduvoxpro.dev.`,
+    `Verify EduVoxPro credential ${safeId}. View the official certificate, issue details, and validation status on www.eduvoxpro.in.`,
     160
   );
 
@@ -44,11 +44,20 @@ export async function generateMetadata({
       siteName: "EduVoxPro",
       locale: "en_US",
       type: "website",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: `EduVoxPro credential ${safeId}`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: ["/opengraph-image"],
     },
     robots: {
       index: true,

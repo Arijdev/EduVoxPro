@@ -93,11 +93,11 @@ export default function LearnWorkspacePage() {
     "@type": "Course",
     name: track.title,
     description: track.description,
-    url: `https://eduvoxpro.dev/learn/${track.slug}`,
+    url: `https://www.eduvoxpro.in/learn/${track.slug}`,
     provider: {
       "@type": "EducationalOrganization",
       name: "EduVoxPro",
-      sameAs: "https://eduvoxpro.dev",
+      sameAs: "https://www.eduvoxpro.in",
     },
     educationalCredentialAwarded: {
       "@type": "EducationalOccupationalCredential",
@@ -114,7 +114,7 @@ export default function LearnWorkspacePage() {
       price: track.isFree ? "0" : track.priceINR.toString(),
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
-      url: `https://eduvoxpro.dev/learn/${track.slug}`,
+      url: `https://www.eduvoxpro.in/learn/${track.slug}`,
     },
   };
 

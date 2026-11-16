@@ -294,7 +294,7 @@ export default function DashboardPage() {
                     </Link>
 
                     <a
-                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://eduvoxpro.dev/certificate/${cert.verificationId}`)}`}
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.eduvoxpro.in/certificate/${cert.verificationId}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs inline-flex items-center justify-center gap-1 transition-colors shadow-sm self-start sm:self-auto"
