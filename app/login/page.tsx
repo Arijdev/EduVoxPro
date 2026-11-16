@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -47,7 +47,7 @@ export default function LoginPage() {
           <div className="w-12 h-12 mx-auto rounded-xl bg-gradient-to-tr from-accent-indigo to-accent-cyan flex items-center justify-center shadow-lg shadow-indigo-200">
             <Terminal className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-black text-slate-900">Sign In to EduVortexPro</h1>
+          <h1 className="text-2xl font-black text-slate-900">Sign In to EduVoxPro</h1>
           <p className="text-xs text-slate-500">
             Access your courses, progression checkpoints, and certificates.
           </p>
@@ -103,7 +103,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 required
-                placeholder="••••••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-accent-indigo transition-colors"
@@ -142,3 +142,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

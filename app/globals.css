@@ -1,16 +1,72 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #F8FAFC;
-  --foreground: #0F172A;
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   EduVoxPro â€” 60-30-10 Light Mode Theme Tokens
+   Switch themes by setting data-theme="academic" | "emerald" | "editorial" on <html>.
+   Default: Option A (Academic Trust)
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+:root,
+[data-theme="academic"] {
+  /* Option A â€” Academic Trust (Deep Royal Blue & Slate) */
+  --color-dominant: #F8FAFC;   /* 60% canvas */
+  --color-surface: #FFFFFF;    /* 30% cards/surfaces */
+  --color-surface-alt: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+  --color-ink: #0F172A;        /* 30% primary text */
+  --color-ink-muted: #475569;  /* 30% body copy */
+  --color-ink-subtle: #64748B;
+  --color-accent: #1D4ED8;     /* 10% accent */
+  --color-accent-hover: #1E40AF;
+  --color-accent-soft: #EFF6FF;
+  --color-accent-contrast: #FFFFFF;
+  --color-success: #047857;
+  --color-success-soft: #ECFDF5;
+}
+
+[data-theme="emerald"] {
+  /* Option B â€” Modern Engineering (Emerald Forest & Warm Stone) */
+  --color-dominant: #FAFAF9;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F5F4;
+  --color-border: #E7E5E4;
+  --color-border-strong: #D6D3D1;
+  --color-ink: #1C1917;
+  --color-ink-muted: #57534E;
+  --color-ink-subtle: #78716C;
+  --color-accent: #047857;
+  --color-accent-hover: #065F46;
+  --color-accent-soft: #ECFDF5;
+  --color-accent-contrast: #FFFFFF;
+  --color-success: #047857;
+  --color-success-soft: #ECFDF5;
+}
+
+[data-theme="editorial"] {
+  /* Option C â€” Crisp Editorial (Indigo Ink & Cool Gray) */
+  --color-dominant: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-border-strong: #D1D5DB;
+  --color-ink: #111827;
+  --color-ink-muted: #4B5563;
+  --color-ink-subtle: #6B7280;
+  --color-accent: #4338CA;
+  --color-accent-hover: #3730A3;
+  --color-accent-soft: #EEF2FF;
+  --color-accent-contrast: #FFFFFF;
+  --color-success: #047857;
+  --color-success-soft: #ECFDF5;
 }
 
 body {
-  color: #0F172A;
-  background-color: #F8FAFC;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+  color: var(--color-ink);
+  background-color: var(--color-dominant);
+  font-family: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -74,3 +130,4 @@ body {
     margin: 0mm;
   }
 }
+

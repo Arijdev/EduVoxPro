@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import {
-  Terminal,
   Award,
   LayoutDashboard,
   Home,
@@ -12,7 +12,8 @@ import {
   LogOut,
   Menu,
   X,
-  Sparkles,
+  Info,
+  Mail,
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 
@@ -23,122 +24,84 @@ export const Navbar: React.FC = () => {
 
   const isActive = (path: string) => pathname === path;
 
+  const linkClass = (active: boolean) =>
+    `px-3 py-2 text-sm transition-colors inline-flex items-center gap-2 border-b-2 ${
+      active
+        ? "text-ink border-accent font-medium"
+        : "text-ink-muted border-transparent hover:text-ink hover:border-border-strong"
+    }`;
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/90 backdrop-blur-xl transition-all shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo: EduVortexPro */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-indigo via-accent-cyan to-accent-emerald p-[1.5px] shadow-md shadow-accent-indigo/20 group-hover:shadow-accent-indigo/30 transition-all duration-300">
-            <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
-              <Terminal className="w-5 h-5 text-accent-indigo group-hover:scale-110 transition-transform duration-300" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-black text-lg tracking-tight text-slate-900">
-                EduVortex<span className="text-accent-indigo">Pro</span>
-              </span>
-              <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border border-indigo-200 bg-indigo-50 text-accent-indigo font-bold tracking-wider">
-                V3.0
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium hidden sm:block">Deep Technical Mastery & Free Certs</p>
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-surface/95 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="EduVoxPro home">
+          <Image
+            src="/eduvoxpro-mark.svg"
+            alt="EduVoxPro"
+            width={36}
+            height={36}
+            className="w-9 h-9"
+            priority
+          />
+          <div className="leading-tight">
+            <span className="font-semibold text-base tracking-tight text-ink">
+              EduVox<span className="text-accent">Pro</span>
+            </span>
+            <p className="text-[11px] text-ink-subtle hidden sm:block">Engineering certifications</p>
           </div>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 font-medium text-sm">
-          <Link
-            href="/"
-            className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-              isActive("/")
-                ? "text-accent-indigo bg-indigo-50 border border-indigo-200 font-semibold"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
-          >
-            <Home className="w-4 h-4" />
-            Home
+        <nav className="hidden md:flex items-center gap-1">
+          <Link href="/" className={linkClass(isActive("/"))}>
+            <Home className="w-4 h-4" /> Home
           </Link>
 
           {user && (
-            <Link
-              href="/dashboard"
-              className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-                isActive("/dashboard")
-                  ? "text-accent-indigo bg-indigo-50 border border-indigo-200 font-semibold"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              Dashboard
+            <Link href="/dashboard" className={linkClass(isActive("/dashboard"))}>
+              <LayoutDashboard className="w-4 h-4" /> Dashboard
               {enrollments.length > 0 && (
-                <span className="px-1.5 py-0.2 text-[10px] rounded-full bg-indigo-100 text-accent-indigo font-mono font-bold">
-                  {enrollments.length}
-                </span>
+                <span className="font-mono text-[11px] text-ink-subtle">({enrollments.length})</span>
               )}
             </Link>
           )}
 
-          <Link
-            href="/about"
-            className="px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-          >
-            <Sparkles className="w-4 h-4" />
-            About
+          <Link href="/courses" className={linkClass(isActive("/courses"))}>
+            <BookOpen className="w-4 h-4" /> Courses
           </Link>
-
-          <Link
-            href="/courses"
-            className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-              isActive("/courses")
-                ? "text-accent-indigo bg-indigo-50 border border-indigo-200 font-semibold"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Courses
+          <Link href="/about" className={linkClass(isActive("/about"))}>
+            <Info className="w-4 h-4" /> About
           </Link>
-
-          <Link
-            href="/contact"
-            className="px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-          >
-            <Terminal className="w-4 h-4" />
-            Contact
+          <Link href="/contact" className={linkClass(isActive("/contact"))}>
+            <Mail className="w-4 h-4" /> Contact
           </Link>
 
           {certificates.length > 0 && user && (
-            <Link
-              href={`/certificate/${certificates[0].id}`}
-              className="px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50"
-            >
-              <Award className="w-4 h-4 text-accent-emerald" />
-              Latest Cert
+            <Link href={`/certificate/${certificates[0].id}`} className={linkClass(pathname.startsWith("/certificate"))}>
+              <Award className="w-4 h-4" /> Certificate
             </Link>
           )}
         </nav>
 
-        {/* User / Auth CTA */}
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-accent-indigo to-accent-cyan flex items-center justify-center font-bold text-xs text-white">
+              <div className="flex items-center gap-2 px-3 py-1.5 border border-border bg-surface-alt">
+                <div className="w-6 h-6 border border-border-strong bg-surface flex items-center justify-center font-mono text-xs text-ink">
                   {user.fullName ? user.fullName[0].toUpperCase() : "U"}
                 </div>
-                <div className="text-left text-xs">
-                  <div className="font-semibold text-slate-800 truncate max-w-[120px]">
-                    {user.fullName || "Master Engineer"}
+                <div className="text-left leading-tight">
+                  <div className="text-xs font-medium text-ink truncate max-w-[120px]">
+                    {user.fullName || "Engineer"}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-mono">
-                    {user.email?.split("@")[0] || "user"}
+                  <div className="text-[10px] text-ink-subtle font-mono truncate max-w-[120px]">
+                    {user.email}
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => logout()}
-                title="Sign Out"
-                className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                title="Sign out"
+                className="p-2 border border-border text-ink-muted hover:text-ink hover:border-border-strong transition-colors"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -147,112 +110,52 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => openAuthModal("login")}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+                className="px-3 py-2 text-sm font-medium text-ink-muted hover:text-ink transition-colors"
               >
-                Sign In
+                Sign in
               </button>
               <button
                 onClick={() => openAuthModal("signup")}
-                className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-accent-indigo to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 rounded-lg shadow-md shadow-accent-indigo/25 transition-all active:scale-95 flex items-center gap-1.5"
+                className="px-4 py-2 text-sm font-semibold text-accent-contrast bg-accent hover:bg-accent-hover border border-accent transition-colors"
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                Enroll & Certify
+                Get started
               </button>
             </div>
           )}
         </div>
 
-        {/* Mobile menu trigger */}
-        <div className="md:hidden flex items-center gap-2">
+        <div className="md:hidden flex items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-slate-700 hover:bg-slate-100"
+            className="p-2 border border-border text-ink hover:border-border-strong"
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white px-4 py-4 space-y-3 shadow-lg">
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-accent-indigo bg-indigo-50 font-medium"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Home
-          </Link>
-
-          {user && (
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-accent-indigo bg-indigo-50 font-medium"
-            >
-              <LayoutDashboard className="w-4 h-4 mr-2" />
-              Student Dashboard
-            </Link>
-          )}
-
-          <Link
-            href="/about"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium"
-          >
-            About
-          </Link>
-
-          <Link
-            href="/courses"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium"
-          >
-            Courses
-          </Link>
-
-          <Link
-            href="/contact"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium"
-          >
-            Contact
-          </Link>
-
+        <div className="md:hidden border-t border-border bg-surface px-4 py-4 space-y-1">
+          <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-ink hover:bg-surface-alt">Home</Link>
+          {user && <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-ink hover:bg-surface-alt">Dashboard</Link>}
+          <Link href="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-ink hover:bg-surface-alt">Courses</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-ink hover:bg-surface-alt">About</Link>
+          <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-ink hover:bg-surface-alt">Contact</Link>
           {user ? (
-            <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
-              <span className="text-sm text-slate-700">{user.email}</span>
+            <div className="pt-3 mt-2 border-t border-border flex items-center justify-between">
+              <span className="text-xs text-ink-muted font-mono truncate">{user.email}</span>
               <button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="text-xs text-red-600 font-medium px-2 py-1 bg-red-50 rounded border border-red-200"
+                onClick={() => { logout(); setMobileMenuOpen(false); }}
+                className="text-xs text-ink font-medium px-2.5 py-1.5 border border-border hover:border-border-strong"
               >
-                Log Out
+                Sign out
               </button>
             </div>
           ) : (
-            <div className="pt-2 border-t border-slate-200 flex gap-2">
-              <button
-                onClick={() => {
-                  openAuthModal("login");
-                  setMobileMenuOpen(false);
-                }}
-                className="flex-1 py-2 text-sm text-center font-medium bg-slate-100 rounded-lg text-slate-800"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => {
-                  openAuthModal("signup");
-                  setMobileMenuOpen(false);
-                }}
-                className="flex-1 py-2 text-sm text-center font-bold bg-accent-indigo text-white rounded-lg shadow"
-              >
-                Sign Up
-              </button>
+            <div className="pt-3 mt-2 border-t border-border flex gap-2">
+              <button onClick={() => { openAuthModal("login"); setMobileMenuOpen(false); }} className="flex-1 py-2 text-sm border border-border text-ink hover:bg-surface-alt">Sign in</button>
+              <button onClick={() => { openAuthModal("signup"); setMobileMenuOpen(false); }} className="flex-1 py-2 text-sm font-semibold bg-accent text-accent-contrast border border-accent">Get started</button>
             </div>
           )}
         </div>
@@ -260,3 +163,5 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
+
+

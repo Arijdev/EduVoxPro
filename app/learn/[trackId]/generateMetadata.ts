@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export async function generateMetadata({
@@ -13,14 +13,14 @@ export async function generateMetadata({
 
   if (!track) {
     return {
-      title: "Track Not Found | EduVortexPro",
+      title: "Track Not Found | EduVoxPro",
       description: "The certification track you requested does not exist.",
       robots: { index: false, follow: false },
     };
   }
 
   return {
-    title: `${track.title} | EduVortexPro`,
+    title: `${track.title} | EduVoxPro`,
     description: track.description,
     keywords: [
       track.title,
@@ -29,12 +29,12 @@ export async function generateMetadata({
       "Technical Mastery",
       "Verifiable Certificate",
     ],
-    authors: [{ name: "EduVortexPro Team" }],
+    authors: [{ name: "EduVoxPro Team" }],
     openGraph: {
-      title: `${track.title} | EduVortexPro`,
+      title: `${track.title} | EduVoxPro`,
       description: track.description,
-      url: `https://eduvortexpro.dev/learn/${track.slug}`,
-      siteName: "EduVortexPro",
+      url: `https://EduVoxPro.dev/learn/${track.slug}`,
+      siteName: "EduVoxPro",
       locale: "en_US",
       type: "website",
       images: [
@@ -48,7 +48,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${track.title} | EduVortexPro`,
+      title: `${track.title} | EduVoxPro`,
       description: track.description,
       images: ["/og-image.jpg"],
     },
@@ -57,7 +57,8 @@ export async function generateMetadata({
       follow: true,
     },
     alternates: {
-      canonical: `https://eduvortexpro.dev/learn/${track.slug}`,
+      canonical: `https://EduVoxPro.dev/learn/${track.slug}`,
     },
   };
 }
+

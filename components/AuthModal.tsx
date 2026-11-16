@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { X, Mail, Lock, User, Terminal, ArrowRight, ShieldCheck } from "lucide-react";
@@ -61,7 +61,7 @@ export const AuthModal: React.FC = () => {
             <Terminal className="w-6 h-6 text-white" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            {mode === "login" ? "Welcome Back, Engineer" : "Join EduVortexPro"}
+            {mode === "login" ? "Welcome Back, Engineer" : "Join EduVoxPro"}
           </h2>
           <p className="text-xs text-slate-500">
             {mode === "login"
@@ -177,7 +177,7 @@ export const AuthModal: React.FC = () => {
               <input
                 type="password"
                 required
-                placeholder="••••••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-accent-indigo transition-colors"
@@ -218,3 +218,4 @@ export const AuthModal: React.FC = () => {
     </div>
   );
 };
+

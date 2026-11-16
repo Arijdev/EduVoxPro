@@ -1,8 +1,8 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 import { TRACKS } from "@/data/curriculum";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://eduvortexpro.dev";
+  const baseUrl = "https://EduVoxPro.dev";
 
   const staticRoutes = [
     "",
@@ -28,3 +28,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...staticRoutes, ...trackRoutes];
 }
+

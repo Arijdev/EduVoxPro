@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
@@ -6,45 +6,29 @@ export async function generateMetadata({
   params: Promise<{ certificateId: string }>;
 }): Promise<Metadata> {
   const { certificateId } = await params;
+  const id = decodeURIComponent(certificateId || "");
 
   return {
-    title: `Certificate Verification | ${certificateId} | EduVortexPro`,
-    description: `Verify professional credential ${certificateId} issued by EduVortexPro Institute of Technical Mastery.`,
-    keywords: [
-      "Certificate Verification",
-      certificateId,
-      "Verifiable Credential",
-      "EduVortexPro",
-    ],
-    authors: [{ name: "EduVortexPro Team" }],
+    title: `Certificate Verification | ${id} | EduVoxPro`,
+    description: `Verify credential ${id} issued by EduVoxPro. View the official certificate and verification details.`,
+    keywords: ["Certificate Verification", id, "Verifiable Credential", "EduVoxPro"],
+    authors: [{ name: "EduVoxPro" }],
     openGraph: {
-      title: `Certificate Verification | ${certificateId} | EduVortexPro`,
-      description: `Verify professional credential ${certificateId} issued by EduVortexPro.`,
-      url: `https://eduvortexpro.dev/certificate/${certificateId}`,
-      siteName: "EduVortexPro",
+      title: `Certificate Verification | ${id} | EduVoxPro`,
+      description: `Verify credential ${id} issued by EduVoxPro.`,
+      url: `https://eduvoxpro.dev/certificate/${encodeURIComponent(id)}`,
+      siteName: "EduVoxPro",
       locale: "en_US",
       type: "website",
-      images: [
-        {
-          url: "/og-image.jpg",
-          width: 1200,
-          height: 630,
-          alt: `Certificate ${certificateId}`,
-        },
-      ],
     },
     twitter: {
-      card: "summary_large_image",
-      title: `Certificate Verification | ${certificateId} | EduVortexPro`,
-      description: `Verify professional credential ${certificateId} issued by EduVortexPro.`,
-      images: ["/og-image.jpg"],
+      card: "summary",
+      title: `Certificate Verification | ${id} | EduVoxPro`,
+      description: `Verify credential ${id} issued by EduVoxPro.`,
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: { index: true, follow: true },
     alternates: {
-      canonical: `https://eduvortexpro.dev/certificate/${certificateId}`,
+      canonical: `https://eduvoxpro.dev/certificate/${encodeURIComponent(id)}`,
     },
   };
 }

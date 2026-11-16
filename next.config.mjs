@@ -12,6 +12,8 @@ const nextConfig = {
       "'unsafe-inline'",
       ...(isDev ? ["'unsafe-eval'"] : []),
       "https://checkout.razorpay.com",
+      "https://cdn.razorpay.com",
+      "https://*.razorpay.com",
       "https://api.qrserver.com",
     ];
 
@@ -26,8 +28,8 @@ const nextConfig = {
               `script-src ${scriptSrc.join(" ")}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' https://images.unsplash.com https://api.qrserver.com data:",
-              "connect-src 'self' https://*.supabase.co https://api.razorpay.com",
-              "frame-src 'self' https://checkout.razorpay.com",
+              "connect-src 'self' https://*.supabase.co https://*.razorpay.com https://lumberjack.razorpay.com",
+              "frame-src 'self' https://api.razorpay.com https://*.razorpay.com",
               "base-uri 'self'",
             ].join("; "),
           },
@@ -46,6 +48,10 @@ const nextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "accelerometer=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\"), gyroscope=(self \"https://api.razorpay.com\"), magnetometer=(self), payment=(self \"https://api.razorpay.com\" \"https://*.razorpay.com\")",
           },
         ],
       },

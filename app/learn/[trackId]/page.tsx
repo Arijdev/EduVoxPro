@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { 
   TRACKS, 
   MODULES, 
@@ -35,15 +35,20 @@ import {
 
 export default function LearnWorkspacePage() {
   const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const trackSlug = params?.trackId as string;
 
   const { 
+    user,
+    openAuthModal,
     isEnrolled, 
-    handleEnrollClick,
+    enrollTrack,
     isModuleUnlocked, 
     isModuleCompleted, 
     getTrackProgress,
-    getCertificateByTrackId 
+    getCertificateByTrackId,
+    refreshUserData,
   } = useApp();
 
   const track = TRACKS.find((t) => t.slug === trackSlug || t.id === trackSlug);
@@ -52,6 +57,19 @@ export default function LearnWorkspacePage() {
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+
+  useEffect(() => {
+    if (!track || !user) return;
+    if (searchParams.get("enrolled") !== "1") return;
+    let cancelled = false;
+    (async () => {
+      await refreshUserData();
+      if (!cancelled) {
+        router.replace(`/learn/${track.slug}`);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [track, user, searchParams, refreshUserData, router]);
 
   if (!track) {
     return (
@@ -75,7 +93,7 @@ export default function LearnWorkspacePage() {
     "@type": "Course",
     "name": track.title,
     "description": track.description,
-    "provider": { "@type": "Organization", "name": "EduVortexPro" },
+    "provider": { "@type": "Organization", "name": "EduVoxPro" },
     "educationalCredentialAwarded": {
       "@type": "EducationalOccupationalCredential",
       "name": `${track.title} Certificate of Mastery`,
@@ -89,15 +107,25 @@ export default function LearnWorkspacePage() {
   };
 
   const handleEnroll = async () => {
-    setEnrolling(true);
-    try {
-      await handleEnrollClick(track);
-    } finally {
-      setEnrolling(false);
+    if (!user) {
+      openAuthModal("signup");
+      return;
     }
+
+    if (track.isFree || track.priceINR === 0) {
+      setEnrolling(true);
+      try {
+        await enrollTrack(track, "100%_FREE_ENROLLMENT");
+      } finally {
+        setEnrolling(false);
+      }
+      return;
+    }
+
+    router.push(`/checkout/${track.slug}`);
   };
 
-  // ── Enrollment Gate ──
+  // â”€â”€ Enrollment Gate â”€â”€
   if (!enrolled) {
     return (
       <div
@@ -127,7 +155,7 @@ export default function LearnWorkspacePage() {
                 </span>
               )}
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 mt-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 mt-2 break-words">
               {track.title}
             </h1>
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -177,7 +205,7 @@ export default function LearnWorkspacePage() {
     );
   }
 
-  // ── Learning Workspace ──
+  // â”€â”€ Learning Workspace â”€â”€
   return (
     <div
       className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]"
@@ -202,7 +230,7 @@ export default function LearnWorkspacePage() {
         </span>
       </div>
 
-      {/* ─── Left Sidebar: Curriculum Tree ─── */}
+      {/* â”€â”€â”€ Left Sidebar: Curriculum Tree â”€â”€â”€ */}
       <aside
         className={`fixed lg:sticky top-16 left-0 z-30 w-80 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 lg:translate-x-0 shadow-lg lg:shadow-none ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -333,7 +361,7 @@ export default function LearnWorkspacePage() {
         />
       )}
 
-      {/* ─── Main Content Viewer ─── */}
+      {/* â”€â”€â”€ Main Content Viewer â”€â”€â”€ */}
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12 space-y-10 min-w-0">
         {activeModule ? (
           <article className="space-y-10">
@@ -347,11 +375,11 @@ export default function LearnWorkspacePage() {
                 <span className="text-accent-indigo font-semibold">Module {activeModuleIndex + 1} of {trackModules.length}</span>
               </nav>
 
-              <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight break-words">
                 {activeModule.title}
               </h1>
 
-              <div className="flex items-center gap-4 text-xs text-slate-500 pt-1 flex-wrap">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500 pt-1">
                 <span className="flex items-center gap-1 font-mono">
                   <Clock className="w-3.5 h-3.5 text-accent-cyan" />
                   {activeModule.estimatedMinutes} Minutes Reading
@@ -431,7 +459,7 @@ export default function LearnWorkspacePage() {
                       <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
                         {section.items.map((item, itemIdx) => (
                           <li key={itemIdx} className="flex items-start gap-2">
-                            <span className="text-accent-indigo font-bold mt-0.5">•</span>
+                            <span className="text-accent-indigo font-bold mt-0.5">â€¢</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -453,14 +481,14 @@ export default function LearnWorkspacePage() {
             />
 
             {/* Prev / Next Navigation */}
-            <div className="pt-6 border-t border-slate-200 flex items-center justify-between gap-4">
+            <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
               <button
                 disabled={activeModuleIndex === 0}
                 onClick={() => {
                   setActiveModuleIndex(prev => prev - 1);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Previous Module</span>
@@ -473,7 +501,7 @@ export default function LearnWorkspacePage() {
                     setActiveModuleIndex(prev => prev + 1);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-md shadow-indigo-200 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto justify-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-md shadow-indigo-200 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <span>Next: Module {activeModuleIndex + 2}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -500,3 +528,4 @@ export default function LearnWorkspacePage() {
     </div>
   );
 }
+

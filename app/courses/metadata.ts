@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Certification Course Catalog | EduVortexPro",
+  title: "Certification Course Catalog | EduVoxPro",
   description:
-    "Browse all EduVortexPro certification tracks. Comprehensive 7–10 module engineering curricula with 80% MCQ checkpoints and verifiable credentials. 2 completely free tracks available.",
+    "Browse all EduVoxPro certification tracks. Comprehensive 7â€“10 module engineering curricula with 80% MCQ checkpoints and verifiable credentials. 2 completely free tracks available.",
   keywords: [
     "Certification Courses",
     "Tech Certification Tracks",
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     "Generative AI Specialist",
     "Full-Stack Architect",
   ],
-  authors: [{ name: "EduVortexPro Team" }],
+  authors: [{ name: "EduVoxPro Team" }],
   openGraph: {
-    title: "Certification Course Catalog | EduVortexPro",
+    title: "Certification Course Catalog | EduVoxPro",
     description:
       "Browse all certification tracks with verifiable credentials and free options.",
-    url: "https://eduvortexpro.dev/courses",
-    siteName: "EduVortexPro",
+    url: "https://EduVoxPro.dev/courses",
+    siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Certification Course Catalog | EduVortexPro",
+    title: "Certification Course Catalog | EduVoxPro",
     description:
       "Browse all certification tracks with verifiable credentials and free options.",
     images: ["/og-image.jpg"],
@@ -43,6 +43,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://eduvortexpro.dev/courses",
+    canonical: "https://EduVoxPro.dev/courses",
   },
 };
+

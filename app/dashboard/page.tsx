@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -56,32 +56,32 @@ export default function DashboardPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-background min-h-screen">
       
       {/* ─── Profile / Stats Banner ─── */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-card relative overflow-hidden">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-8 flex flex-col md:flex-row md:items-start md:justify-between gap-6 shadow-card relative overflow-hidden">
         <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-50 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-accent-indigo via-accent-cyan to-accent-emerald p-[2px] shadow-lg shadow-indigo-200">
-            <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center font-bold text-2xl text-accent-indigo">
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-tr from-accent-indigo via-accent-cyan to-accent-emerald p-[2px] shadow-lg shadow-indigo-200">
+            <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center font-bold text-xl sm:text-2xl text-accent-indigo">
               {user?.fullName ? user.fullName[0].toUpperCase() : "A"}
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 break-words">
                 {user?.fullName || "Alex Rivera"}
               </h1>
               <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-50 text-accent-indigo border border-indigo-200 font-bold">
                 VERIFIED STUDENT
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 font-mono mt-0.5">
-              {user?.email || "alex.rivera@eduvortexpro.dev"}
+            <p className="text-xs sm:text-sm text-slate-500 font-mono mt-0.5 break-all">
+              {user?.email || "alex.rivera@eduvoxpro.dev"}
             </p>
           </div>
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-6 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 text-center">
+        <div className="grid grid-cols-3 gap-3 sm:gap-6 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 text-center shrink-0">
           <div>
             <div className="text-2xl font-black text-slate-900 font-mono">{enrolledTrackObjects.length}</div>
             <div className="text-[11px] text-slate-500 uppercase tracking-wider font-mono">Enrolled</div>
@@ -98,8 +98,8 @@ export default function DashboardPage() {
       </div>
 
       {/* ─── Tabs Bar ─── */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setActiveTab("tracks")}
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
@@ -134,7 +134,7 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* ─── Tab 1: Enrolled Tracks ─── */}
+      {/* â”€â”€â”€ Tab 1: Enrolled Tracks â”€â”€â”€ */}
       {activeTab === "tracks" && (
         <div className="space-y-6">
           {enrolledTrackObjects.length > 0 ? (
@@ -195,7 +195,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
+                    <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center gap-3">
                       <Link
                         href={`/learn/${track.slug}`}
                         className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white font-semibold text-xs sm:text-sm text-center flex items-center justify-center gap-1.5 shadow-md shadow-indigo-200 transition-all active:scale-95"
@@ -250,7 +250,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ─── Tab 2: My Certificates ─── */}
+      {/* â”€â”€â”€ Tab 2: My Certificates â”€â”€â”€ */}
       {activeTab === "certificates" && (
         <div className="space-y-6">
           {certificates.length > 0 ? (
@@ -274,7 +274,7 @@ export default function DashboardPage() {
                       {cert.trackTitle}
                     </h3>
 
-                    <div className="text-xs font-mono text-accent-cyan">
+                    <div className="text-xs font-mono text-accent-cyan break-all">
                       ID: {cert.verificationId}
                     </div>
 
@@ -284,20 +284,20 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-emerald-200 flex items-center justify-between gap-3">
+                  <div className="pt-4 border-t border-emerald-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <Link
                       href={`/certificate/${cert.id}`}
-                      className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-accent-emerald to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-emerald-200 hover:scale-105 transition-all"
+                      className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-accent-emerald to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-200 hover:scale-105 transition-all"
                     >
                       <Award className="w-4 h-4" />
                       <span>View & Print Certificate</span>
                     </Link>
 
                     <a
-                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://eduvortexpro.dev/certificate/${cert.verificationId}`)}`}
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://eduvoxpro.dev/certificate/${cert.verificationId}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs flex items-center gap-1 transition-colors shadow-sm"
+                      className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs inline-flex items-center justify-center gap-1 transition-colors shadow-sm self-start sm:self-auto"
                       title="Share to LinkedIn"
                     >
                       <Share2 className="w-4 h-4 text-blue-600" />
@@ -315,7 +315,7 @@ export default function DashboardPage() {
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-slate-900">No Certificates Earned Yet</h3>
                 <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
-                  Complete all modules in an enrolled track and pass each module&apos;s 5-question MCQ checkpoint with ≥80% to generate your high-res verifiable credential.
+                  Complete all modules in an enrolled track and pass each module&apos;s 5-question MCQ checkpoint with â‰¥80% to generate your high-res verifiable credential.
                 </p>
               </div>
               {enrolledTrackObjects.length > 0 && (
@@ -334,3 +334,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

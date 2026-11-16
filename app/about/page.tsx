@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -19,6 +19,8 @@ import {
   ArrowRight,
   CheckCircle2,
   Gift,
+  Download,
+  Smartphone,
 } from "lucide-react";
 
 export default function AboutPage() {
@@ -33,21 +35,21 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-20 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* ─── Hero Section ─── */}
+      {/* â”€â”€â”€ Hero Section â”€â”€â”€ */}
       <section className="relative pt-20 sm:pt-32 pb-16 text-center overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] bg-gradient-to-tr from-indigo-100/40 via-sky-50/30 to-emerald-100/20 blur-[140px] rounded-full pointer-events-none -z-10" />
 
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-300 bg-emerald-50 text-emerald-700 text-xs font-mono font-bold mb-8">
           <Terminal className="w-3.5 h-3.5" />
-          <span>EduVortexPro Institute of Technical Mastery</span>
+          <span>EduVoxPro Institute of Technical Mastery</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 max-w-3xl mx-auto leading-[1.08]">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 max-w-3xl mx-auto leading-[1.08] break-words">
           Built for Deep Technical Mastery
         </h1>
 
         <p className="mt-6 text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          EduVortexPro is an education-first certification platform that replaces video fluff with
+          EduVoxPro is an education-first certification platform that replaces video fluff with
           high-density documentation, real code architectures, and an 80% MCQ progression gate.
           Earn verifiable, print-ready credentials trusted by hiring teams.
         </p>
@@ -96,7 +98,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ─── Mission & Approach ─── */}
+      {/* â”€â”€â”€ Mission & Approach â”€â”€â”€ */}
       <section className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <span className="text-xs font-mono uppercase text-accent-indigo font-bold tracking-wider">
@@ -106,14 +108,14 @@ export default function AboutPage() {
             Mastery over memorization
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            Most platforms teach you to watch videos. EduVortexPro teaches you to read, write,
+            Most platforms teach you to watch videos. EduVoxPro teaches you to read, write,
             and reason like an engineer. Every track is built around deep documentation, architectural
             schematics, and code patterns you can copy, modify, and ship.
           </p>
           <ul className="space-y-3">
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
-              <span>7–10 module curricula per certification track</span>
+              <span>7â€“10 module curricula per certification track</span>
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
@@ -125,7 +127,7 @@ export default function AboutPage() {
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
-              <span>Direct UPI checkout — zero gateway markup on paid tracks</span>
+              <span>Direct UPI checkout â€” zero gateway markup on paid tracks</span>
             </li>
           </ul>
         </div>
@@ -200,6 +202,74 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ─── Download App ─── */}
+      <section id="download" className="border border-slate-200 rounded-3xl bg-white p-8 sm:p-12 shadow-sm">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          <div className="space-y-4">
+            <span className="text-xs font-mono uppercase text-accent-indigo font-bold tracking-wider">
+              Mobile App
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+              Download the EduVoxPro App
+            </h2>
+            <p className="text-slate-600 leading-relaxed">
+              Learn on the go with structured modules, 80% MCQ assessments, and verifiable credentials—optimized for mobile study sessions.
+            </p>
+            <ul className="space-y-2 text-sm text-slate-600">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
+                <span>Access your enrolled tracks and track progress anywhere</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
+                <span>Fast, distraction-free reading and module quizzes</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0 mt-0.5" />
+                <span>View and verify earned certificates</span>
+              </li>
+            </ul>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
+              <a
+                href="/eduvoxpro-app.apk"
+                download
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-indigo to-indigo-700 hover:from-indigo-500 hover:to-indigo-800 text-white font-bold text-sm shadow-lg shadow-indigo-200 transition-all active:scale-95"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download for Android (APK)</span>
+              </a>
+              <span className="text-xs text-slate-500 font-mono">
+                iOS version coming soon
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 flex flex-col items-center text-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+              <Smartphone className="w-8 h-8 text-accent-indigo" />
+            </div>
+            <div>
+              <div className="text-lg font-bold text-slate-900">EduVoxPro Mobile</div>
+              <div className="text-sm text-slate-500 mt-1">Engineering certifications in your pocket</div>
+            </div>
+            <div className="grid grid-cols-3 gap-3 w-full max-w-xs text-xs text-slate-600 pt-2">
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="font-mono font-bold text-slate-900">44</div>
+                <div className="mt-0.5 text-slate-500">Modules</div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="font-mono font-bold text-slate-900">80%</div>
+                <div className="mt-0.5 text-slate-500">Gate</div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="font-mono font-bold text-slate-900">QR</div>
+                <div className="mt-0.5 text-slate-500">Verify</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="text-center mt-12">
         <Link
           href="/courses"
@@ -212,3 +282,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

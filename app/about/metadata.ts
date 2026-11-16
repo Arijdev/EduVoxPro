@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About EduVortexPro | Institute of Technical Mastery",
+  title: "About EduVoxPro | Institute of Technical Mastery",
   description:
-    "Learn about EduVortexPro, an education-first certification platform that replaces video fluff with high-density documentation, real code architectures, and an 80% MCQ progression gate. Earn verifiable, print-ready credentials.",
+    "Learn about EduVoxPro, an education-first certification platform that replaces video fluff with high-density documentation, real code architectures, and an 80% MCQ progression gate. Earn verifiable, print-ready credentials.",
   keywords: [
-    "About EduVortexPro",
+    "About EduVoxPro",
     "Technical Mastery Institute",
     "Education First Certification",
     "Verifiable Credentials",
   ],
-  authors: [{ name: "EduVortexPro Team" }],
+  authors: [{ name: "EduVoxPro Team" }],
   openGraph: {
-    title: "About EduVortexPro | Institute of Technical Mastery",
+    title: "About EduVoxPro | Institute of Technical Mastery",
     description:
       "Education-first tech certification platform with verifiable credentials and free tracks.",
-    url: "https://eduvortexpro.dev/about",
-    siteName: "EduVortexPro",
+    url: "https://EduVoxPro.dev/about",
+    siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
     images: [
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "About EduVortexPro",
+        alt: "About EduVoxPro",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About EduVortexPro | Institute of Technical Mastery",
+    title: "About EduVoxPro | Institute of Technical Mastery",
     description:
       "Education-first tech certification platform with verifiable credentials.",
     images: ["/og-image.jpg"],
@@ -40,6 +40,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://eduvortexpro.dev/about",
+    canonical: "https://EduVoxPro.dev/about",
   },
 };
+

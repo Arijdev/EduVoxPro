@@ -1,23 +1,23 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Student Dashboard | EduVortexPro",
+  title: "Student Dashboard | EduVoxPro",
   description:
-    "Your EduVortexPro student dashboard. Track enrolled courses, module progress, and verifiable certificates.",
+    "Your EduVoxPro student dashboard. Track enrolled courses, module progress, and verifiable certificates.",
   keywords: ["Student Dashboard", "My Courses", "Certificate Progress"],
-  authors: [{ name: "EduVortexPro Team" }],
+  authors: [{ name: "EduVoxPro Team" }],
   openGraph: {
-    title: "Student Dashboard | EduVortexPro",
+    title: "Student Dashboard | EduVoxPro",
     description:
       "Track enrolled courses, module progress, and verifiable certificates.",
-    url: "https://eduvortexpro.dev/dashboard",
-    siteName: "EduVortexPro",
+    url: "https://EduVoxPro.dev/dashboard",
+    siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Student Dashboard | EduVortexPro",
+    title: "Student Dashboard | EduVoxPro",
     description:
       "Track enrolled courses, module progress, and verifiable certificates.",
   },
@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: "https://eduvortexpro.dev/dashboard",
+    canonical: "https://EduVoxPro.dev/dashboard",
   },
 };
+

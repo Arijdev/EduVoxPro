@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { 
@@ -46,15 +46,16 @@ interface AppContextType {
   // Certificates
   getCertificateById: (certId: string) => Certificate | undefined;
   getCertificateByTrackId: (trackId: string) => Certificate | undefined;
+  refreshUserData: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  USER: "eduvortex_user",
-  ENROLLMENTS: "eduvortex_enrollments",
-  PROGRESS: "eduvortex_progress",
-  CERTIFICATES: "eduvortex_certificates",
+  USER: "EduVox_user",
+  ENROLLMENTS: "EduVox_enrollments",
+  PROGRESS: "EduVox_progress",
+  CERTIFICATES: "EduVox_certificates",
 };
 
 export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -91,7 +92,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         if (session?.user) {
           const currentUser: SupabaseUser = {
             id: session.user.id,
-            email: session.user.email || "developer@eduvortexpro.dev",
+            email: session.user.email || "developer@EduVoxPro.dev",
             fullName:
               session.user.user_metadata?.full_name ||
               session.user.email?.split("@")[0] ||
@@ -102,14 +103,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
           syncUserDataFromSupabase(currentUser.id);
         } else {
-          // No active Supabase session – clear any leftover auth state
+          // No active Supabase session â€“ clear any leftover auth state
           supabase.auth.signOut().catch(() => {});
           localStorage.removeItem(STORAGE_KEYS.USER);
           setUser(null);
         }
       })
       .catch(() => {
-        // Supabase unreachable – keep unauthenticated state, app still works
+        // Supabase unreachable â€“ keep unauthenticated state, app still works
         localStorage.removeItem(STORAGE_KEYS.USER);
         setUser(null);
       });
@@ -119,7 +120,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       if (session?.user) {
         const loggedUser: SupabaseUser = {
           id: session.user.id,
-          email: session.user.email || "developer@eduvortexpro.dev",
+          email: session.user.email || "developer@EduVoxPro.dev",
           fullName: session.user.user_metadata?.full_name || session.user.email?.split("@")[0] || "Master Developer",
           avatarUrl: session.user.user_metadata?.avatar_url,
         };
@@ -332,7 +333,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       amountPaidINR: track.priceINR,
     };
 
-    // [SUPABASE INTEGRATION POINT] Persist in database
+    // [SUPABASE INTEGRATION POINT] Persist in database (omit id to match DB default type)
     try {
       await supabase.from("enrollments").insert({
         user_id: user.id,
@@ -530,6 +531,11 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return certificates.find(c => c.trackId === trackId);
   };
 
+  const refreshUserData = async () => {
+    if (!user) return;
+    await syncUserDataFromSupabase(user.id);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -557,6 +563,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         recordQuizAttempt,
         getCertificateById,
         getCertificateByTrackId,
+        refreshUserData,
       }}
     >
       {children}
@@ -571,3 +578,4 @@ export const useApp = () => {
   }
   return context;
 };
+

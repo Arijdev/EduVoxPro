@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import {
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { formatINR } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 import {
   DEFAULT_UPI_CONFIG,
   generateUPIQrUrl,
@@ -106,9 +107,20 @@ export const CheckoutModal: React.FC = () => {
     setWebhookMessage(null);
 
     try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+      if (!accessToken) {
+        throw new Error("Please log in again to continue with payment.");
+      }
+
       const res = await fetch("/api/create-order", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           amount: track?.priceINR * 100 || 0,
           currency: "INR",
@@ -128,7 +140,7 @@ export const CheckoutModal: React.FC = () => {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
         amount: track?.priceINR * 100 || 0,
         currency: "INR",
-        name: "EduVortexPro",
+        name: "EduVoxPro",
         description: `Certification: ${track?.title}`,
         order_id,
         handler: async (response: any) => {
@@ -138,7 +150,10 @@ export const CheckoutModal: React.FC = () => {
           try {
             const verifyRes = await fetch("/api/verify-payment", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
               body: JSON.stringify({
                 razorpay_order_id,
                 razorpay_payment_id,
@@ -177,6 +192,10 @@ export const CheckoutModal: React.FC = () => {
       };
 
       const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", (resp: any) => {
+        setIsProcessing(false);
+        setPaymentError(resp?.error?.description || "Payment failed. Please try again.");
+      });
       rzp.open();
     } catch (err: any) {
       setPaymentError(err.message || "Failed to initiate Razorpay payment");
@@ -387,3 +406,4 @@ export const CheckoutModal: React.FC = () => {
     </div>
   );
 };
+

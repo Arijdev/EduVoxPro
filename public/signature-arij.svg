@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" fill="none">
+  <title>Arij Chowdhury Signature</title>
+  <g transform="translate(2,4)">
+    <text x="0" y="58" font-family="'Segoe Script','Brush Script MT','Lucida Handwriting','Apple Chancery','Snell Roundhand',cursive" font-size="46" font-style="italic" font-weight="400" fill="#0B1F3B" letter-spacing="0.2">Arij Chowdhury</text>
+    <path d="M2 72 C90 80, 200 82, 320 76 S395 66, 412 60" stroke="#1D4ED8" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>

@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EduVortexPro | Deep Tech Mastery & Verifiable Certifications",
+  title: "EduVoxPro | Deep Tech Mastery & Verifiable Certifications",
   description:
-    "Comprehensive 7–10 module tech certification tracks with 2 completely free tracks. High-density documentation, code architectures, 80% MCQ checkpoints, and verifiable credentials. Free Web Development and AI Prompt Engineering certifications.",
+    "Comprehensive 7â€“10 module tech certification tracks with 2 completely free tracks. High-density documentation, code architectures, 80% MCQ checkpoints, and verifiable credentials. Free Web Development and AI Prompt Engineering certifications.",
   keywords: [
     "Tech Certifications",
     "Agentic AI Developer",
@@ -11,16 +11,16 @@ export const metadata: Metadata = {
     "Full-Stack Architect",
     "Free Web Development Certification",
     "AI Prompt Engineering & Ethics",
-    "EduVortexPro",
+    "EduVoxPro",
     "Verifiable Certificates",
   ],
-  authors: [{ name: "EduVortexPro Team" }],
+  authors: [{ name: "EduVoxPro Team" }],
   openGraph: {
-    title: "EduVortexPro | High-Impact Tech Certifications",
+    title: "EduVoxPro | High-Impact Tech Certifications",
     description:
       "Deep, education-first technical certifications with 2 completely free tracks. Verified on Supabase.",
-    url: "https://eduvortexpro.dev",
-    siteName: "EduVortexPro",
+    url: "https://EduVoxPro.dev",
+    siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
     images: [
@@ -28,15 +28,15 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "EduVortexPro - Deep Technical Mastery & Verifiable Certifications",
+        alt: "EduVoxPro - Deep Technical Mastery & Verifiable Certifications",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "EduVortexPro | Deep Tech Mastery & Verifiable Certifications",
+    title: "EduVoxPro | Deep Tech Mastery & Verifiable Certifications",
     description:
-      "Comprehensive 7–10 module tech certification tracks with 2 completely free tracks.",
+      "Comprehensive 7â€“10 module tech certification tracks with 2 completely free tracks.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -51,6 +51,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://eduvortexpro.dev/",
+    canonical: "https://EduVoxPro.dev/",
   },
 };
+

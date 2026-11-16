@@ -1,5 +1,5 @@
-/**
- * EduVortexPro — Comprehensive Curriculum & Supabase PostgreSQL Schema Mirror
+﻿/**
+ * EduVoxPro â€” Comprehensive Curriculum & Supabase PostgreSQL Schema Mirror
  * 
  * [SUPABASE INTEGRATION POINT]
  * Maps directly to Supabase tables:
@@ -180,7 +180,7 @@ export const TRACKS: Track[] = [
     },
   },
 
-  // 3. PAID TRACK: Agentic AI Developer (₹99 - 10 Modules)
+  // 3. PAID TRACK: Agentic AI Developer (â‚¹99 - 10 Modules)
   {
     id: "track-agentic-ai",
     slug: "agentic-ai-developer",
@@ -211,7 +211,7 @@ export const TRACKS: Track[] = [
     },
   },
 
-  // 4. PAID TRACK: Generative AI Specialist (₹89 - 9 Modules)
+  // 4. PAID TRACK: Generative AI Specialist (â‚¹89 - 9 Modules)
   {
     id: "track-generative-ai",
     slug: "generative-ai-specialist",
@@ -242,7 +242,7 @@ export const TRACKS: Track[] = [
     },
   },
 
-  // 5. PAID TRACK: Modern Full-Stack Architect (₹79 - 10 Modules)
+  // 5. PAID TRACK: Modern Full-Stack Architect (â‚¹79 - 10 Modules)
   {
     id: "track-fullstack-architect",
     slug: "modern-fullstack-architect",
@@ -331,10 +331,10 @@ export const MODULES: Record<string, Module[]> = {
           language: "bash",
           filename: "network-probe.sh",
           code: `# Inspect DNS resolution latency and IP records
-dig +trace eduvortexpro.dev
+dig +trace EduVoxPro.dev
 
 # Inspect HTTP/2 and HTTP/3 TLS handshake headers
-curl -Iv --http3 https://eduvortexpro.dev`,
+curl -Iv --http3 https://EduVoxPro.dev`,
           explanation: "Network inspection tools reveal the exact cryptographic TLS negotiation and HTTP version."
         },
         {
@@ -1577,7 +1577,7 @@ console.log("2. Synchronous End");
   ],
 
   // =========================================================================
-  // 3. PAID TRACK: Agentic AI Developer (₹99 - 10 Modules)
+  // 3. PAID TRACK: Agentic AI Developer (â‚¹99 - 10 Modules)
   // =========================================================================
   "agentic-ai-developer": [
     // Module 1: ReAct
@@ -2372,7 +2372,7 @@ console.log("2. Synchronous End");
   ],
 
   // =========================================================================
-  // 4. PAID TRACK: Generative AI Specialist (₹89 - 9 Modules)
+  // 4. PAID TRACK: Generative AI Specialist (â‚¹89 - 9 Modules)
   // =========================================================================
   "generative-ai-specialist": [
     createModule(
@@ -3052,7 +3052,7 @@ console.log("2. Synchronous End");
   ],
 
   // =========================================================================
-  // 5. PAID TRACK: Modern Full-Stack Architect (₹79 - 10 Modules)
+  // 5. PAID TRACK: Modern Full-Stack Architect (â‚¹79 - 10 Modules)
   // =========================================================================
   "modern-fullstack-architect": [
     createModule(
@@ -3813,3 +3813,4 @@ console.log("2. Synchronous End");
     )
   ]
 };
+

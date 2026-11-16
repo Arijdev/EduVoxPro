@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -35,7 +35,7 @@ export default function ContactPage() {
 
   return (
     <div className="space-y-20 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* ─── Page Header ─── */}
+      {/* â”€â”€â”€ Page Header â”€â”€â”€ */}
       <section className="relative pt-20 sm:pt-28 pb-16 text-center overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] bg-gradient-to-tr from-indigo-100/40 via-sky-50/30 to-emerald-100/20 blur-[140px] rounded-full pointer-events-none -z-10" />
 
@@ -44,7 +44,7 @@ export default function ContactPage() {
           <span>Get in Touch</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 max-w-3xl mx-auto leading-[1.08]">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 max-w-3xl mx-auto leading-[1.08] break-words">
           We&rsquo;d Love to Hear From You
         </h1>
 
@@ -54,7 +54,7 @@ export default function ContactPage() {
         </p>
       </section>
 
-      {/* ─── Contact Form + Info Grid ─── */}
+      {/* â”€â”€â”€ Contact Form + Info Grid â”€â”€â”€ */}
       <section className="grid lg:grid-cols-2 gap-12">
         {/* Form Column */}
         <div className="space-y-6">
@@ -187,8 +187,8 @@ export default function ContactPage() {
                 {
                   icon: Mail,
                   title: "Support Email",
-                  value: "support@eduvortexpro.dev",
-                  href: "mailto:support@eduvortexpro.dev",
+                  value: "support@EduVoxPro.dev",
+                  href: "mailto:support@EduVoxPro.dev",
                 },
                 {
                   icon: Phone,
@@ -236,7 +236,7 @@ export default function ContactPage() {
                 },
                 {
                   q: "How do paid tracks work?",
-                  a: "Paid tracks use direct UPI checkout (₹79–₹99). After payment webhook verification, you&rsquo;re instantly enrolled and module 1 unlocks.",
+                  a: "Paid tracks use direct UPI checkout (â‚¹79â€“â‚¹99). After payment webhook verification, you&rsquo;re instantly enrolled and module 1 unlocks.",
                 },
                 {
                   q: "How do I verify a certificate?",
@@ -287,3 +287,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign In | EduVortexPro",
+  title: "Sign In | EduVoxPro",
   description:
-    "Sign in to your EduVortexPro account. Access your courses, progression checkpoints, and verifiable certificates.",
-  keywords: ["Login", "Sign In", "EduVortexPro Account"],
-  authors: [{ name: "EduVortexPro Team" }],
+    "Sign in to your EduVoxPro account. Access your courses, progression checkpoints, and verifiable certificates.",
+  keywords: ["Login", "Sign In", "EduVoxPro Account"],
+  authors: [{ name: "EduVoxPro Team" }],
   openGraph: {
-    title: "Sign In | EduVortexPro",
+    title: "Sign In | EduVoxPro",
     description: "Access your courses, progression checkpoints, and certificates.",
-    url: "https://eduvortexpro.dev/login",
-    siteName: "EduVortexPro",
+    url: "https://EduVoxPro.dev/login",
+    siteName: "EduVoxPro",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Sign In | EduVortexPro",
+    title: "Sign In | EduVoxPro",
     description:
       "Access your courses, progression checkpoints, and certificates.",
   },
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: "https://eduvortexpro.dev/login",
+    canonical: "https://EduVoxPro.dev/login",
   },
 };
+
