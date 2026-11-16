@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AuthModal } from "@/components/AuthModal";
 import { CheckoutModal } from "@/components/CheckoutModal";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteUrl, siteName, siteTitle, siteDescription } from "./metadata";
 
 const inter = Inter({
@@ -114,6 +115,7 @@ export default function RootLayout({
           <Footer />
           <AuthModal />
           <CheckoutModal />
+          <SpeedInsights />
         </AppContextProvider>
       </body>
     </html>
