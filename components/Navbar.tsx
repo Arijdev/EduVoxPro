@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
-  Award,
   LayoutDashboard,
   Home,
   BookOpen,
@@ -19,7 +18,7 @@ import { useApp } from "@/context/AppContext";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const { user, logout, openAuthModal, certificates, enrollments } = useApp();
+  const { user, logout, openAuthModal, enrollments } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
@@ -74,12 +73,6 @@ export const Navbar: React.FC = () => {
           <Link href="/contact" className={linkClass(isActive("/contact"))}>
             <Mail className="w-4 h-4" /> Contact
           </Link>
-
-          {certificates.length > 0 && user && (
-            <Link href={`/certificate/${certificates[0].id}`} className={linkClass(pathname.startsWith("/certificate"))}>
-              <Award className="w-4 h-4" /> Certificate
-            </Link>
-          )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
