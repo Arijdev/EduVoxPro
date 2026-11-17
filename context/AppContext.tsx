@@ -101,7 +101,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           };
           setUser(currentUser);
           localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
-          syncUserDataFromSupabase(currentUser.id);
+          syncUserDataFromSupabase(currentUser.id, currentUser.fullName);
         } else {
           // No active Supabase session – clear any leftover auth state
           supabase.auth.signOut().catch(() => {});
@@ -126,7 +126,9 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         };
         setUser(loggedUser);
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(loggedUser));
-        syncUserDataFromSupabase(loggedUser.id);
+        if (_event === "SIGNED_IN" || _event === "INITIAL_SESSION") {
+          syncUserDataFromSupabase(loggedUser.id, loggedUser.fullName);
+        }
       } else if (_event === "SIGNED_OUT") {
         setUser(null);
         localStorage.removeItem(STORAGE_KEYS.USER);
@@ -138,14 +140,15 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
   }, []);
 
-  const syncUserDataFromSupabase = async (userId: string) => {
+  const syncUserDataFromSupabase = async (userId: string, studentName?: string) => {
     try {
+      let resolvedCertificates: Certificate[] = [];
       const { data: dbEnrollments, error: errEnr } = await supabase
         .from("enrollments")
         .select("*")
         .eq("user_id", userId);
 
-      if (!errEnr && dbEnrollments && dbEnrollments.length > 0) {
+      if (!errEnr && dbEnrollments) {
         const mappedEnrollments: Enrollment[] = dbEnrollments.map((e: any) => ({
           id: e.id,
           userId: e.user_id,
@@ -156,6 +159,8 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           amountPaidINR: e.amount_paid_inr || 0,
         }));
         saveEnrollments(mappedEnrollments);
+      } else if (errEnr) {
+        console.error("[Supabase] Failed to load enrollments:", errEnr.message);
       }
 
       const { data: dbCertificates, error: errCert } = await supabase
@@ -163,7 +168,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .select("*")
         .eq("user_id", userId);
 
-      if (!errCert && dbCertificates && dbCertificates.length > 0) {
+      if (!errCert && dbCertificates) {
         const mappedCerts: Certificate[] = dbCertificates.map((c: any) => ({
           id: c.id,
           verificationId: c.verification_id,
@@ -177,7 +182,104 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           badgeRole: c.badge_role || "Certified Specialist",
           isFreeTrack: c.is_free_track || false,
         }));
-        saveCertificates(mappedCerts);
+
+        let localCerts: Certificate[] = [];
+        try {
+          const stored = localStorage.getItem(STORAGE_KEYS.CERTIFICATES);
+          localCerts = stored ? JSON.parse(stored) : [];
+        } catch {
+          localCerts = [];
+        }
+
+        const mergedCerts = [...mappedCerts];
+        const ids = new Set(mergedCerts.map((c) => c.id));
+        const verificationIds = new Set(mergedCerts.map((c) => c.verificationId));
+
+        for (const localCert of localCerts) {
+          if (localCert.userId !== userId) continue;
+          if (ids.has(localCert.id) || verificationIds.has(localCert.verificationId)) continue;
+
+          const synced = await persistCertificateToSupabase(localCert);
+          mergedCerts.push(localCert);
+          ids.add(localCert.id);
+          verificationIds.add(localCert.verificationId);
+
+          if (!synced) {
+            console.warn("[Supabase] Certificate kept locally; will retry on next sync:", localCert.id);
+          }
+        }
+
+        resolvedCertificates = mergedCerts;
+        saveCertificates(resolvedCertificates);
+      } else if (errCert) {
+        console.error("[Supabase] Failed to load certificates:", errCert.message);
+      }
+
+      const { data: dbProgress, error: errProg } = await supabase
+        .from("user_progress")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (!errProg && dbProgress) {
+        const mappedProgress: Record<string, UserProgress> = {};
+        for (const p of dbProgress) {
+          mappedProgress[p.track_id] = {
+            userId: p.user_id,
+            trackId: p.track_id,
+            completedModuleIds: p.completed_module_ids || [],
+            quizScores: p.quiz_scores || {},
+            unlockedModuleIds: p.unlocked_module_ids || [],
+            lastActiveModuleId: p.last_active_module_id || "",
+          };
+        }
+        saveProgress(mappedProgress);
+
+        // Recover certificates for completed tracks if the original insert failed.
+        if (!errCert && dbCertificates) {
+          const recoveredCertificates: Certificate[] = [];
+          for (const track of TRACKS) {
+            const trackProgress = mappedProgress[track.id];
+            const trackModules = MODULES[track.slug] || [];
+            if (!trackProgress || trackModules.length === 0) continue;
+
+            const completedIds = new Set(trackProgress.completedModuleIds || []);
+            if (!trackModules.every((module) => completedIds.has(module.id))) continue;
+            if (resolvedCertificates.some((c) => c.trackId === track.id && c.userId === userId)) continue;
+
+            const scores = Object.values(trackProgress.quizScores || {});
+            const averageScore = scores.length
+              ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
+              : 92;
+
+            const recovered: Certificate = {
+              id: `cert_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+              verificationId: generateVerificationId(track.slug, userId),
+              trackId: track.id,
+              userId,
+              studentName: studentName || "EduVoxPro Student",
+              trackTitle: track.title,
+              issueDate: new Date().toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              }),
+              scoreAverage: averageScore,
+              skillsCertified: track.skillsCovered,
+              badgeRole: track.roleBadge,
+              isFreeTrack: track.isFree,
+            };
+
+            await persistCertificateToSupabase(recovered);
+            recoveredCertificates.push(recovered);
+          }
+
+          if (recoveredCertificates.length > 0) {
+            resolvedCertificates = [...resolvedCertificates, ...recoveredCertificates];
+            saveCertificates(resolvedCertificates);
+          }
+        }
+      } else if (errProg) {
+        console.error("[Supabase] Failed to load progress:", errProg.message);
       }
     } catch (err) {
       console.warn("[Supabase] Fallback to local cache:", err);
@@ -206,6 +308,63 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const saveCertificates = (newCertificates: Certificate[]) => {
     setCertificates(newCertificates);
     localStorage.setItem(STORAGE_KEYS.CERTIFICATES, JSON.stringify(newCertificates));
+  };
+
+  const persistProgressToSupabase = async (
+    userId: string,
+    trackId: string,
+    trackProgress: UserProgress
+  ) => {
+    try {
+      const { error } = await supabase.from("user_progress").upsert(
+        {
+          user_id: userId,
+          track_id: trackId,
+          completed_module_ids: trackProgress.completedModuleIds,
+          unlocked_module_ids: trackProgress.unlockedModuleIds,
+          quiz_scores: trackProgress.quizScores,
+          last_active_module_id: trackProgress.lastActiveModuleId || null,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,track_id" }
+      );
+
+      if (error) {
+        console.error("[Supabase] Failed to persist progress:", error.message);
+      }
+    } catch (err) {
+      console.error("[Supabase] Progress persistence error:", err);
+    }
+  };
+
+  const persistCertificateToSupabase = async (certificate: Certificate) => {
+    try {
+      const { error } = await supabase.from("certificates").upsert(
+        {
+          id: certificate.id,
+          verification_id: certificate.verificationId,
+          track_id: certificate.trackId,
+          user_id: certificate.userId,
+          student_name: certificate.studentName,
+          track_title: certificate.trackTitle,
+          issue_date: certificate.issueDate,
+          score_average: certificate.scoreAverage,
+          skills_certified: certificate.skillsCertified,
+          badge_role: certificate.badgeRole,
+          is_free_track: !!certificate.isFreeTrack,
+        },
+        { onConflict: "id" }
+      );
+
+      if (error) {
+        console.error("[Supabase] Failed to persist certificate:", error.message);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.error("[Supabase] Certificate persistence error:", err);
+      return false;
+    }
   };
 
   // Auth Functions
@@ -240,6 +399,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       fullName: data.user.user_metadata?.full_name || fullName || email.split("@")[0],
     };
     saveUserData(loggedUser);
+    await syncUserDataFromSupabase(loggedUser.id, loggedUser.fullName);
     setIsAuthModalOpen(false);
   };
 
@@ -306,7 +466,8 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setCertificates([]);
     localStorage.removeItem(STORAGE_KEYS.ENROLLMENTS);
     localStorage.removeItem(STORAGE_KEYS.PROGRESS);
-    localStorage.removeItem(STORAGE_KEYS.CERTIFICATES);
+    // Certificates are public credentials. Keep the local cache so a failed
+    // Supabase insert can be retried on the next login/session sync.
   };
 
   const openAuthModal = (mode: "login" | "signup" = "login") => {
@@ -355,9 +516,10 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       amountPaidINR: track.priceINR,
     };
 
-    // [SUPABASE INTEGRATION POINT] Persist in database (omit id to match DB default type)
+    // [SUPABASE INTEGRATION POINT] Persist in database
     try {
-      await supabase.from("enrollments").insert({
+      const { error } = await supabase.from("enrollments").insert({
+        id: newEnrollment.id,
         user_id: user.id,
         track_id: track.id,
         status: "active",
@@ -365,8 +527,12 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         amount_paid_inr: track.priceINR,
         enrolled_at: newEnrollment.enrolledAt,
       });
-    } catch {
-      // Supabase persistence failed; local state is authoritative for this session.
+
+      if (error) {
+        console.error("[Supabase] Failed to persist enrollment:", error.message);
+      }
+    } catch (err) {
+      console.error("[Supabase] Enrollment persistence error:", err);
     }
 
     const updatedEnrollments = [...enrollments.filter(e => e.trackId !== track.id), newEnrollment];
@@ -388,6 +554,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       },
     };
     saveProgress(updatedProgress);
+    void persistProgressToSupabase(user.id, track.id, updatedProgress[track.id]);
 
     closeCheckout();
   };
@@ -500,29 +667,25 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           saveCertificates(updatedCertificates);
 
           // [SUPABASE INTEGRATION POINT] Persist certificate in Supabase table
-          try {
-            supabase.from("certificates").insert({
-              id: earnedCert.id,
-              verification_id: earnedCert.verificationId,
-              track_id: track.id,
-              user_id: user.id,
-              student_name: earnedCert.studentName,
-              track_title: earnedCert.trackTitle,
-              issue_date: earnedCert.issueDate,
-              score_average: earnedCert.scoreAverage,
-              skills_certified: earnedCert.skillsCertified,
-              badge_role: earnedCert.badgeRole,
-              is_free_track: track.isFree,
-            });
-        } catch {
-          // Supabase persistence failed; certificate remains in local state.
-        }
+          void persistCertificateToSupabase(earnedCert);
 
           // Update enrollment status to completed
           const updatedEnrollments = enrollments.map(e => 
             e.trackId === track.id ? { ...e, status: "completed" as const } : e
           );
           saveEnrollments(updatedEnrollments);
+
+          void (async () => {
+            const { error } = await supabase
+              .from("enrollments")
+              .update({ status: "completed" })
+              .eq("user_id", user.id)
+              .eq("track_id", track.id);
+
+            if (error) {
+              console.error("[Supabase] Failed to update enrollment status:", error.message);
+            }
+          })();
         } else {
           earnedCert = existingCert;
         }
@@ -542,6 +705,8 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       [track.id]: updatedTrackProg,
     });
 
+    void persistProgressToSupabase(user.id, track.id, updatedTrackProg);
+
     return { unlockedNext, earnedCertificate: earnedCert };
   };
 
@@ -555,7 +720,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const refreshUserData = async () => {
     if (!user) return;
-    await syncUserDataFromSupabase(user.id);
+    await syncUserDataFromSupabase(user.id, user.fullName);
   };
 
   return (

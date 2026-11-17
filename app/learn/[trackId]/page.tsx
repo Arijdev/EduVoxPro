@@ -486,6 +486,7 @@ export default function LearnWorkspacePage() {
 
             {/* Quiz Module */}
             <QuizModule
+              key={activeModule.id}
               quiz={activeModule.quiz}
               trackSlug={track.slug}
               isCompleted={isModuleCompleted(track.id, activeModule.id)}

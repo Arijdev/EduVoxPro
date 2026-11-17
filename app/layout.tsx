@@ -102,7 +102,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="bg-canvas text-ink min-h-screen flex flex-col selection:bg-accent/15 selection:text-accent antialiased"
+        className="bg-canvas text-ink min-h-screen flex flex-col selection:bg-accent/15 selection:text-accent antialiased print:min-h-0 print:block"
         suppressHydrationWarning
       >
         <script
@@ -111,7 +111,7 @@ export default function RootLayout({
         />
         <AppContextProvider>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 print:block">{children}</main>
           <Footer />
           <AuthModal />
           <CheckoutModal />

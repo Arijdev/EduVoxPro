@@ -37,7 +37,7 @@ function mapDbCertificate(c: any): Certificate {
 export default function CertificatePage() {
   const params = useParams();
   const certParamId = decodeURIComponent((params?.certificateId as string) || "");
-  const { getCertificateById } = useApp();
+  const { certificates } = useApp();
 
   const [certificate, setCertificate] = useState<Certificate | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,9 @@ export default function CertificatePage() {
       setNotFound(false);
 
       // 1) Local context (current user session)
-      const local = getCertificateById(certParamId);
+      const local = certificates.find(
+        (c) => c.id === certParamId || c.verificationId === certParamId
+      );
       if (local && !cancelled) {
         setCertificate(local);
         setLoading(false);
@@ -126,18 +128,12 @@ export default function CertificatePage() {
     return () => {
       cancelled = true;
     };
-  }, [certParamId, getCertificateById]);
+  }, [certParamId, certificates]);
 
   const track = useMemo(
     () => (certificate ? TRACKS.find((t) => t.id === certificate.trackId) : undefined),
     [certificate]
   );
-
-  const skills = useMemo(() => {
-    if (!certificate) return [];
-    if (certificate.skillsCertified?.length) return certificate.skillsCertified;
-    return track?.skillsCovered || [];
-  }, [certificate, track]);
 
   const verifyUrl = certificate
     ? `${origin}/certificate/${encodeURIComponent(certificate.verificationId)}`
@@ -203,9 +199,15 @@ export default function CertificatePage() {
             <span className="font-mono text-ink">{certParamId || "—"}</span>. Check the verification
             ID or QR code and try again.
           </p>
-          <div className="pt-2 flex items-center justify-center gap-3">
+          <p className="text-xs text-ink-muted">
+            If you recently completed this course, open your dashboard to get the current certificate.
+          </p>
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link href="/" className="px-4 py-2 text-sm font-medium border border-border text-ink hover:bg-surface-alt">
               Go to home
+            </Link>
+            <Link href="/dashboard" className="px-4 py-2 text-sm font-medium border border-border text-ink hover:bg-surface-alt">
+              Go to dashboard
             </Link>
             <Link
               href="/courses"
@@ -222,7 +224,7 @@ export default function CertificatePage() {
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(verifyUrl)}`;
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 space-y-6 bg-background">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 space-y-6 bg-background print:min-h-0 print:p-0 print:space-y-0 print:bg-white">
       {credentialJsonLd && (
         <script
           type="application/ld+json"
@@ -274,10 +276,10 @@ export default function CertificatePage() {
       <div className="max-w-5xl w-full mx-auto">
         <div
           ref={containerRef}
-          className="certificate-scale-wrapper relative w-full aspect-[1.414/1] overflow-hidden bg-[#FFFEFA] border border-[#D6C48A] print:aspect-auto print:overflow-visible print:border-none print:h-auto"
+          className="certificate-scale-wrapper relative w-full aspect-[1.414/1] overflow-hidden bg-[#FFFEFA] border border-[#D6C48A]"
         >
           <div
-            className="certificate-canvas bg-[#FFFEFA] text-[#1C1917] print:!w-full print:!h-auto print:!transform-none"
+            className="certificate-canvas bg-[#FFFEFA] text-[#1C1917]"
             style={{
               width: "800px",
               height: "566px",
@@ -329,24 +331,11 @@ export default function CertificatePage() {
                     {certificate.studentName}
                   </p>
                   <p className="text-[13px] text-[#475569] leading-[1.7] max-w-[580px]">
-                    has successfully completed the prescribed curriculum and satisfied the 80% assessment
-                    requirement for
+                    has successfully completed the curriculum and met the 80% assessment requirement for
                   </p>
                   <p className="text-[18px] font-semibold text-[#0F172A] border border-[#E2E8F0] bg-white/70 px-6 py-2.5 leading-snug max-w-[640px]">
                     {certificate.trackTitle}
                   </p>
-                  {skills.length > 0 && (
-                    <div className="flex flex-wrap items-center justify-center gap-2 max-w-[620px] pt-0.5">
-                      {skills.slice(0, 5).map((skill, i) => (
-                        <span
-                          key={i}
-                          className="text-[9px] font-mono px-2.5 py-1 border border-[#E2E8F0] bg-white/60 text-[#334155] leading-none"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                   <p className="text-[11px] text-[#64748B] font-mono leading-tight pt-1">
                     Modules: {track?.modulesCount ?? "—"}&nbsp;&nbsp;•&nbsp;&nbsp;Score:{" "}
                     {certificate.scoreAverage}%&nbsp;&nbsp;•&nbsp;&nbsp;Issued: {certificate.issueDate}
@@ -381,11 +370,6 @@ export default function CertificatePage() {
                     <div className="text-[9px] font-mono uppercase tracking-[0.1em] text-[#64748B] leading-none">
                       Verified
                     </div>
-                    {certificate.isFreeTrack && (
-                      <div className="text-[8px] font-mono uppercase tracking-[0.08em] text-[#047857] leading-none">
-                        Free Track
-                      </div>
-                    )}
                   </div>
 
                   <div className="flex flex-col items-end justify-end text-right gap-1.5 pb-1">

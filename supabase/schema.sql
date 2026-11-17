@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS public.questions (
 
 -- 8. Enrollments Table
 CREATE TABLE IF NOT EXISTS public.enrollments (
-  id TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY DEFAULT uuid_generate_v4()::text,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   track_id TEXT NOT NULL REFERENCES public.tracks(id) ON DELETE CASCADE,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed')),
@@ -201,3 +201,91 @@ CREATE POLICY "Certificates public verification read"
 
 CREATE POLICY "Users can create certificates"
   ON public.certificates FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- ==========================================================
+-- Seed default tracks (required for FK constraints)
+-- The app uses static curriculum data, but enrollments,
+-- user_progress, and certificates reference public.tracks.
+-- ==========================================================
+INSERT INTO public.tracks (
+  id, slug, title, role_badge, difficulty, estimated_hours,
+  price_inr, is_free, tagline, description, skills_covered,
+  modules_count, target_audience
+)
+VALUES
+(
+  'track-web-foundations',
+  'foundations-of-modern-web-technologies',
+  'Foundations of Modern Web Technologies',
+  'Junior Web Systems Engineer',
+  'Beginner',
+  42,
+  0,
+  TRUE,
+  'Master semantic HTML5, modern responsive CSS layouts, Git version control, and browser runtime mechanics.',
+  'A comprehensive, 100% free certification track covering foundational internet protocols, the DOM tree, accessible semantic HTML5, Flexbox & CSS Grid, Git branching models, and HTTP caching mechanics.',
+  '["Semantic HTML5 & WAI-ARIA Accessibility", "Modern CSS (Flexbox, Grid & Custom Properties)", "Git CLI & Trunk-Based Team Workflows", "Browser Critical Rendering Path & DOM", "HTTP/2 & HTTP/3 Request Lifecycle", "Responsive Layouts & Mobile-First Principles"]'::jsonb,
+  8,
+  'Aspiring software engineers, self-taught developers, and computer science students building a rock-solid web baseline.'
+),
+(
+  'track-prompt-engineering',
+  'ai-prompt-engineering-ethics',
+  'AI Prompt Engineering & Ethics Certification',
+  'Prompt Systems Specialist',
+  'Beginner',
+  38,
+  0,
+  TRUE,
+  'Harness LLM token mechanics, chain-of-thought prompting, system guardrails, and ethical AI stewardship.',
+  'Learn how large language models tokenize and predict tokens, how to apply few-shot and decomposition patterns, and how to detect bias, hallucination vectors, and security vulnerabilities like jailbreaks.',
+  '["Tokenization & Probability Distributions", "Chain-of-Thought (CoT) & Few-Shot Prompting", "System Instructions & Persona Calibration", "Jailbreak Defense & Prompt Injection Defense", "AI Bias Mitigation & Fairness Auditing", "Structured Output Formatting (JSON Schemas)"]'::jsonb,
+  7,
+  'Developers, product managers, technical writers, and AI operators seeking rigorous prompt engineering skills.'
+),
+(
+  'track-agentic-ai',
+  'agentic-ai-developer',
+  'Agentic AI Developer Certification',
+  'Autonomous Agent Engineer',
+  'Advanced',
+  54,
+  99,
+  FALSE,
+  'Architect production autonomous agent loops, tool-calling graphs, LangGraph state machines, and multi-agent swarms.',
+  'A deep dive into stateful agent orchestration, dynamic tool selection, structured JSON outputs, human-in-the-loop approval gates, episodic memory, vector stores, and automated LLM-as-a-judge trajectory testing.',
+  '["ReAct Pattern & Reflection Loops", "Function Calling & Tool JSON Schemas", "Stateful Graphs (LangGraph & AutoGen)", "Long-term Semantic Memory & Vector Stores", "Human-in-the-Loop (HITL) Safety Gates", "Autonomous Multi-Agent Swarms & Supervisors"]'::jsonb,
+  10,
+  'Senior backend engineers, AI engineers, and system architects building autonomous agent systems.'
+),
+(
+  'track-generative-ai',
+  'generative-ai-specialist',
+  'Generative AI Solutions Specialist',
+  'GenAI Architect',
+  'Intermediate',
+  48,
+  89,
+  FALSE,
+  'Build enterprise Retrieval-Augmented Generation (RAG) pipelines, fine-tuned embeddings, and semantic vector caches.',
+  'Master document chunking strategies, hybrid vector + BM25 keyword retrieval, cross-encoder reranking, semantic caching with Redis, diffusion architectures, and automated evaluation metrics with Ragas.',
+  '["Hybrid Vector & Keyword Retrieval (RAG)", "Cross-Encoder Re-ranking & Precision Tuning", "Semantic Caching & Token Cost Optimization", "Embedding Models & Fine-Tuning Principles", "Diffusion Models & Multimodal Pipelines", "Automated CI/CD RAG Evaluation with Ragas"]'::jsonb,
+  9,
+  'Full-stack developers, ML engineers, and data engineers operationalizing LLM pipelines in production.'
+),
+(
+  'track-fullstack-architect',
+  'modern-fullstack-architect',
+  'Modern Full-Stack Systems Architect',
+  'Principal Systems Architect',
+  'Advanced',
+  58,
+  79,
+  FALSE,
+  'Design hyper-scalable, edge-first distributed apps with Next.js App Router, Supabase RLS, and Event Microservices.',
+  'Master React Server Components, streaming SSR, multi-tenant Supabase PostgreSQL Row Level Security (RLS), edge caching, resilient payment webhooks, database connection pooling, and message broker queues.',
+  '["Next.js App Router & Server Actions", "Supabase Row Level Security (RLS) Policies", "Edge Middleware & Multi-Region Caching", "Idempotent Payment Webhooks & UPI Gateways", "Microservices & Event-Driven Message Brokers", "Database Pooling & Connection Multiplexing"]'::jsonb,
+  10,
+  'Senior software engineers looking to step up into Staff Engineer or Principal Cloud Architect roles.'
+)
+ON CONFLICT DO NOTHING;
