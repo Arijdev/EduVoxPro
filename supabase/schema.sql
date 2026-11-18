@@ -1,14 +1,30 @@
 -- ==========================================================
--- EduVortexPro — Production Supabase PostgreSQL Schema
+-- EduVoxPro — Production Supabase PostgreSQL Schema & Reset
 -- Project URL: https://ulwxniobhvykxtinbywn.supabase.co
 -- Tables: profiles, tracks, modules, lessons, quizzes, questions, enrollments, user_progress, certificates
 -- ==========================================================
 
--- 1. Enable Required Extensions
+-- STEP 1: CLEAN RESET (Drops all existing tables, triggers, and dependencies)
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+
+DROP TABLE IF EXISTS public.questions CASCADE;
+DROP TABLE IF EXISTS public.quizzes CASCADE;
+DROP TABLE IF EXISTS public.lessons CASCADE;
+DROP TABLE IF EXISTS public.modules CASCADE;
+DROP TABLE IF EXISTS public.certificates CASCADE;
+DROP TABLE IF EXISTS public.user_progress CASCADE;
+DROP TABLE IF EXISTS public.enrollments CASCADE;
+DROP TABLE IF EXISTS public.tracks CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+
+-- STEP 2: ENABLE EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 2. User Profiles Table (Mirrors auth.users)
-CREATE TABLE IF NOT EXISTS public.profiles (
+-- STEP 3: CREATE TABLES
+
+-- 1. User Profiles Table (Mirrors auth.users)
+CREATE TABLE public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
   full_name TEXT NOT NULL DEFAULT 'Master Developer',
@@ -18,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Trigger to auto-create profile on auth.users signup
+-- Trigger function to auto-create profile on auth.users signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -34,13 +50,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 3. Certification Tracks Table
-CREATE TABLE IF NOT EXISTS public.tracks (
+-- Backfill profiles for any existing users in auth.users
+INSERT INTO public.profiles (id, email, full_name, avatar_url)
+SELECT 
+  id, 
+  email, 
+  COALESCE(raw_user_meta_data->>'full_name', split_part(email, '@', 1)), 
+  raw_user_meta_data->>'avatar_url'
+FROM auth.users
+ON CONFLICT (id) DO NOTHING;
+
+-- 2. Certification Tracks Table
+CREATE TABLE public.tracks (
   id TEXT PRIMARY KEY,
   slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
@@ -57,8 +82,8 @@ CREATE TABLE IF NOT EXISTS public.tracks (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Modules Table
-CREATE TABLE IF NOT EXISTS public.modules (
+-- 3. Modules Table
+CREATE TABLE public.modules (
   id TEXT PRIMARY KEY,
   track_id TEXT NOT NULL REFERENCES public.tracks(id) ON DELETE CASCADE,
   order_index INTEGER NOT NULL,
@@ -69,8 +94,8 @@ CREATE TABLE IF NOT EXISTS public.modules (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. Lessons / Sub-Chapters Table
-CREATE TABLE IF NOT EXISTS public.lessons (
+-- 4. Lessons Table
+CREATE TABLE public.lessons (
   id TEXT PRIMARY KEY,
   module_id TEXT NOT NULL REFERENCES public.modules(id) ON DELETE CASCADE,
   order_index INTEGER NOT NULL,
@@ -80,8 +105,8 @@ CREATE TABLE IF NOT EXISTS public.lessons (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. Quizzes Table
-CREATE TABLE IF NOT EXISTS public.quizzes (
+-- 5. Quizzes Table
+CREATE TABLE public.quizzes (
   id TEXT PRIMARY KEY,
   module_id TEXT UNIQUE NOT NULL REFERENCES public.modules(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -89,8 +114,8 @@ CREATE TABLE IF NOT EXISTS public.quizzes (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 7. Quiz Questions Table
-CREATE TABLE IF NOT EXISTS public.questions (
+-- 6. Quiz Questions Table
+CREATE TABLE public.questions (
   id TEXT PRIMARY KEY,
   quiz_id TEXT NOT NULL REFERENCES public.quizzes(id) ON DELETE CASCADE,
   order_index INTEGER NOT NULL,
@@ -102,8 +127,8 @@ CREATE TABLE IF NOT EXISTS public.questions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 8. Enrollments Table
-CREATE TABLE IF NOT EXISTS public.enrollments (
+-- 7. Enrollments Table
+CREATE TABLE public.enrollments (
   id TEXT PRIMARY KEY DEFAULT uuid_generate_v4()::text,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   track_id TEXT NOT NULL REFERENCES public.tracks(id) ON DELETE CASCADE,
@@ -113,8 +138,8 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
   enrolled_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. User Progress Table
-CREATE TABLE IF NOT EXISTS public.user_progress (
+-- 8. User Progress Table
+CREATE TABLE public.user_progress (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   track_id TEXT NOT NULL REFERENCES public.tracks(id) ON DELETE CASCADE,
   completed_module_ids JSONB DEFAULT '[]'::jsonb,
@@ -125,8 +150,8 @@ CREATE TABLE IF NOT EXISTS public.user_progress (
   PRIMARY KEY (user_id, track_id)
 );
 
--- 10. Verifiable Certificates Table
-CREATE TABLE IF NOT EXISTS public.certificates (
+-- 9. Verifiable Certificates Table
+CREATE TABLE public.certificates (
   id TEXT PRIMARY KEY,
   verification_id TEXT UNIQUE NOT NULL,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -141,9 +166,7 @@ CREATE TABLE IF NOT EXISTS public.certificates (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ==========================================================
--- PostgreSQL Row Level Security (RLS) Policies
--- ==========================================================
+-- STEP 4: ROW LEVEL SECURITY (RLS) POLICIES
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tracks ENABLE ROW LEVEL SECURITY;
@@ -195,18 +218,14 @@ CREATE POLICY "Users view own progress"
 CREATE POLICY "Users manage own progress"
   ON public.user_progress FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
--- Certificates: Public read so QR codes verify anywhere in the world!
+-- Certificates: Public read so verification links/QR codes work anywhere
 CREATE POLICY "Certificates public verification read"
   ON public.certificates FOR SELECT USING (true);
 
 CREATE POLICY "Users can create certificates"
   ON public.certificates FOR INSERT WITH CHECK (auth.uid() = user_id);
 
--- ==========================================================
--- Seed default tracks (required for FK constraints)
--- The app uses static curriculum data, but enrollments,
--- user_progress, and certificates reference public.tracks.
--- ==========================================================
+-- STEP 5: SEED ALL 7 CERTIFICATION TRACKS
 INSERT INTO public.tracks (
   id, slug, title, role_badge, difficulty, estimated_hours,
   price_inr, is_free, tagline, description, skills_covered,
@@ -287,5 +306,35 @@ VALUES
   '["Next.js App Router & Server Actions", "Supabase Row Level Security (RLS) Policies", "Edge Middleware & Multi-Region Caching", "Idempotent Payment Webhooks & UPI Gateways", "Microservices & Event-Driven Message Brokers", "Database Pooling & Connection Multiplexing"]'::jsonb,
   10,
   'Senior software engineers looking to step up into Staff Engineer or Principal Cloud Architect roles.'
+),
+(
+  'track-data-science',
+  'data-science-mastery',
+  'Data Science Mastery Certification',
+  'Data Science Engineer',
+  'Intermediate',
+  52,
+  79,
+  FALSE,
+  'Master statistical analysis, machine learning, data wrangling with Pandas, and production model deployment.',
+  'A comprehensive data science certification covering Python for data analysis, Pandas & NumPy, exploratory data analysis, statistical inference, supervised & unsupervised machine learning with scikit-learn, feature engineering, model evaluation, data visualization with Matplotlib & Seaborn, and deploying ML models as REST APIs.',
+  '["Python for Data Analysis (Pandas & NumPy)", "Exploratory Data Analysis & Statistical Inference", "Supervised ML: Regression & Classification", "Unsupervised ML: Clustering & Dimensionality Reduction", "Feature Engineering & Model Evaluation Metrics", "Data Visualization (Matplotlib, Seaborn & Plotly)", "SQL for Data Science & Big Data Querying", "ML Model Deployment as REST APIs with FastAPI"]'::jsonb,
+  10,
+  'Aspiring data scientists, analysts, and ML engineers who want to build, evaluate, and ship real-world predictive models.'
+),
+(
+  'track-python-developer',
+  'python-developer-certification',
+  'Python Developer Certification',
+  'Professional Python Developer',
+  'Beginner',
+  56,
+  99,
+  FALSE,
+  'Go from Python basics to building real-world applications, APIs, automation scripts, and databases.',
+  'A complete Python developer curriculum from first principles to professional-grade projects. Covers core Python syntax, object-oriented programming, file I/O, exception handling, decorators & generators, working with APIs, database integration with SQLite & PostgreSQL, test-driven development, async programming, and building web APIs with FastAPI.',
+  '["Core Python Syntax, Data Types & Control Flow", "Object-Oriented Programming (Classes, Inheritance & Polymorphism)", "File I/O, Exception Handling & Context Managers", "Functional Python: Decorators, Generators & Comprehensions", "Working with APIs: requests, JSON & REST Clients", "Database Integration: SQLite, PostgreSQL & SQLAlchemy ORM", "Testing with pytest & Test-Driven Development (TDD)", "Async Python: asyncio, aiohttp & Concurrent Programming", "Building Web APIs with FastAPI & Pydantic", "Automation, Scripting & Deployment Best Practices"]'::jsonb,
+  10,
+  'Beginners and junior developers who want a thorough, project-based Python foundation for careers in web development, data science, or automation.'
 )
-ON CONFLICT DO NOTHING;
+ON CONFLICT (id) DO NOTHING;
